@@ -1,0 +1,1 @@
+{"version":3,"sources":["src/index.ts"],"names":[],"mappings":"AAAA,IAAM,QAAQ,GAAW,eAAzB;AAEA,QAAQ,CAAC,cAAT,CAAwB,UAAxB,EAAoC,SAApC,GAAgD,QAAhD;AAEA,IAAM,CAAC,GAAG,CAAV;AACA,CAAC,GAAG,CAAJ","file":"src.f10117fe.js","sourceRoot":"..","sourcesContent":["const variable: string = 'Hello, World!'\n\ndocument.getElementById('greeting').innerHTML = variable\n\nconst s = 0\ns + 1\n"]}
