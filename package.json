@@ -5,9 +5,11 @@
   "dependencies": {
     "@types/p5": "^0.9.1",
     "p5": "^1.1.9",
+    "ramda": "^0.27.1",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@types/ramda": "^0.27.32",
     "@types/uuid": "^8.3.0",
     "sass": "^1.30.0",
     "typescript": "^3.9.7"
