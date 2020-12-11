@@ -1,17 +1,19 @@
 import { Context, Canvas } from '../types'
 import p5 from 'p5'
 import { newBee } from '../bee'
+import { newV3 } from '../lib'
 
 export const setup = (p: p5): Context => {
   const WIDTH = 1000
   const HEIGHT = WIDTH / 1.618
 
   const canvas: Canvas = {
-    center: p.createVector(WIDTH / 2, HEIGHT / 2),
-    dims: p.createVector(WIDTH, HEIGHT)
+    center: newV3(WIDTH / 2, HEIGHT / 2, 0),
+    dims: newV3(WIDTH, HEIGHT, 0)
   }
 
   p.createCanvas(canvas.dims.x, canvas.dims.y)
+
 
   const initialContext: Context = {
     bees: [],
@@ -59,8 +61,10 @@ export const setup = (p: p5): Context => {
     param.ref.position(x, y)
   })
 
-  return {
+  const ctx =  {
     ...initialContext,
-    bees: [newBee(p, initialContext, true)]
+    bees: [newBee(initialContext)]
   }
+
+  return ctx
 }

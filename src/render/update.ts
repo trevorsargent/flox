@@ -1,149 +1,139 @@
-import p5, { Vector } from 'p5'
 import { Context, Bee } from '../types'
 import { newBee } from '../bee'
+import {
+  add,
+  average,
+  heading2d,
+  invert,
+  magnitude,
+  magSquared,
+  newV3,
+  normalize,
+  scale,
+  sub,
+  sum,
+  V3
+} from '../lib'
+import { pipe } from 'ramda'
 
-export const update = (p: p5, ctx: Context) => {
-  const a = ctx.bees.map(ensurePopulation(p, ctx))
-
+export const update = (ctx: Context) => {
   const updated = {
     ...ctx,
-    bees: ctx.bees
-      .flatMap(ensurePopulation(p, ctx))
-      .map(applyForces(p, ctx))
-      .map(applyVelocities(p, ctx))
+    bees: ensurePopulation(ctx)(ctx.bees)
+      .map(applyForces(ctx))
+      .map(applyVelocities(ctx))
   }
   return updated
 }
 
-const applyVelocities = (p: p5, ctx: Context) => (
-  bee: Bee,
-  idx: number
-): Bee => {
-  const vv: Vector = p
-    .createVector(bee.vel.x, bee.vel.y)
-    .setMag(ctx.params.speedMultiplier.ref.value() as number)
+const applyVelocities = (ctx: Context) => (bee: Bee, idx: number): Bee => {
+  
+  const vv = pipe(
+    normalize,
+    scale(ctx.params.speedMultiplier.ref.value() as number)
+  )(bee.vel)
 
   return {
     ...bee,
-    pos: p.createVector(
+    pos: newV3(
       (bee.pos.x + ctx.canvas.dims.x + vv.x) % ctx.canvas.dims.x,
-      (bee.pos.y + ctx.canvas.dims.y + vv.y) % ctx.canvas.dims.y
+      (bee.pos.y + ctx.canvas.dims.y + vv.y) % ctx.canvas.dims.y,
+      0
     )
   }
 }
 
-const applyForces = (p: p5, ctx: Context) => (bee: Bee): Bee => {
-  const neighbors = ctx.bees.filter(isNeighborBee(p, ctx, bee))
+const applyForces = (ctx: Context) => (bee: Bee): Bee => {
+  const neighbors = ctx.bees.filter(isNeighborBee(ctx, bee))
 
-  const cohesive = calcCohesiveForce(p, ctx, bee, neighbors)
-  const alignment = calcAlignmentForce(p, ctx, bee, neighbors)
-  const separation = calcSeparationForce(p, ctx, bee, neighbors)
+  const cohesive = calcCohesiveForce(ctx, bee, neighbors)
+  const alignment = calcAlignmentForce(ctx, bee, neighbors)
+  const separation = calcSeparationForce(ctx, bee, neighbors)
+
+  
+  const forces = sum([cohesive, alignment, separation])
+  const normal = pipe(normalize, scale(.2))(forces)
+
+  const newVelocity = pipe(add(bee.vel), normalize)(normal)
 
   return {
     ...bee,
-    vel: bee.vel //
-      .copy()
-      .add(cohesive)
-      .add(alignment)
-      .add(separation)
-      .normalize()
+    vel: newVelocity
   }
 }
 
-const calcSeparationForce = (
-  p: p5,
-  ctx: Context,
-  bee: Bee,
-  neighbors: Bee[]
-): Vector => {
+const calcSeparationForce = (ctx: Context, bee: Bee, neighbors: Bee[]): V3 => {
   if (neighbors.length === 0) {
-    return p.createVector(0, 0)
+    return newV3(0, 0, 0)
   }
 
-  const influence = neighbors.reduce(
-    (f, n) => {
-      const delta = Vector.sub(n.pos, bee.pos)
+  const influence = neighbors.reduce((f, n) => {
+    const delta = sub(n.pos)(bee.pos)
+    const scaled = scale(1 / magSquared(delta))(delta)
 
-      return {
-        force: Vector.add(f.force, delta.div(delta.magSq())),
-        count: f.count + 1
-      }
-    },
-    { force: p.createVector(0, 0), count: 0 }
-  )
+    return add(f)(scaled)
+  }, newV3(0, 0, 0))
 
-  return influence.force
-    .mult(-1)
-    .mult(ctx.params.separationForce.ref.value() as number)
+  return pipe(
+    invert,
+    scale(ctx.params.separationForce.ref.value() as number)
+  )(influence)
 }
 
 const calcCohesiveForce = (
-  p: p5, //
   ctx: Context,
   bee: Bee,
   neighbors: Bee[]
 ) => {
   if (neighbors.length === 0) {
-    return p.createVector(0, 0)
+    return newV3(0,0,0)
   }
 
-  const influence = neighbors.reduce(
-    (f, n) => {
-      return {
-        force: Vector.add(f.force, n.pos),
-        count: f.count + 1
-      }
-    },
-    { force: p.createVector(0, 0), count: 0 }
-  )
+  const centerOfMass = average(neighbors.map((n) => n.pos))
+  const cohesiveForce = pipe(
+    normalize,
+    sub(bee.pos), // subtract from bee.pos...
+    scale(ctx.params.cohesiveForce.ref.value() as number)
+  )(centerOfMass)
 
-  return influence.force
-    .div(influence.count)
-    .sub(bee.pos)
-    .normalize()
-    .mult(ctx.params.cohesiveForce.ref.value() as number)
+  return cohesiveForce
 }
 
 const calcAlignmentForce = (
-  p: p5,
   ctx: Context,
   bee: Bee,
   neighbors: Bee[]
-): Vector => {
+): V3 => {
   if (neighbors.length === 0) {
-    return p.createVector(0, 0)
+    return newV3(0,0,0)
   }
 
-  const influence = neighbors.reduce(
-    (f, n) => {
-      const delta = Vector.sub(n.pos, bee.pos)
-
-      return {
-        force: Vector.add(f.force, n.vel.copy().div(delta.magSq()).limit(2)),
-        count: f.count + 1
-      }
-    },
-    { force: p.createVector(0, 0), count: 0 }
+  const weightedHeading = average(
+    neighbors.map((n) => {
+      const delta = sub(n.pos)(bee.pos)
+      return scale(1 / magSquared(delta))(n.vel)
+    })
   )
 
-  return influence.force
-    .div(influence.count)
-    .mult(ctx.params.alignmentForce.ref.value() as number)
+  const influence = scale(ctx.params.alignmentForce.ref.value() as number)(
+    weightedHeading
+  )
+  return influence
 }
 
-const isNeighborBee = (p: p5, ctx: Context, thisBee: Bee) => (thatBee: Bee) => {
+const isNeighborBee = (ctx: Context, thisBee: Bee) => (thatBee: Bee) => {
   if (thisBee.id === thatBee.id) {
     return false
   }
 
-  const delta = Vector.sub(thatBee.pos, thisBee.pos)
+  const delta = sub(thatBee.pos)(thisBee.pos)
 
-  if (delta.mag() > ctx.params.viewDistance.ref.value()) {
+  if (magnitude(delta) > ctx.params.viewDistance.ref.value()) {
     return false
   }
 
   if (
-    p.abs(delta.heading() - thisBee.vel.heading()) >
+    Math.abs(heading2d(delta) - heading2d(thisBee.vel)) >
     (ctx.params.viewAngle.ref.value() as number) / 2
   ) {
     return false
@@ -152,18 +142,16 @@ const isNeighborBee = (p: p5, ctx: Context, thisBee: Bee) => (thatBee: Bee) => {
   return true
 }
 
-const ensurePopulation = (p: p5, ctx: Context) => (bee: Bee, idx: number) => {
-  if (idx > 0) {
-    return bee
+const ensurePopulation = (ctx: Context) => (bees: Bee[]) => {
+ 
+  const target = ctx.params.targetPopulation.ref.value() as number
+
+  if(bees.length < target){
+    return [...bees, newBee(ctx)]
   }
 
-  if (ctx.bees.length < ctx.params.targetPopulation.ref.value()) {
-    return [bee, newBee(p, ctx)]
+  if(bees.length > target){
+    return bees.slice(1)
   }
-
-  if (ctx.bees.length > ctx.params.targetPopulation.ref.value()) {
-    return []
-  }
-
-  return bee
+  return bees
 }

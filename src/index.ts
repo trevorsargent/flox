@@ -12,7 +12,7 @@ function sketch(p: p5) {
   }
 
   p.draw = () => {
-    ctx = update(p, ctx)
+    ctx = update(ctx)
     draw(p, ctx)
   }
 }

@@ -1,4 +1,5 @@
 import p5, { Vector, Element } from 'p5'
+import { V3 } from './lib'
 
 export interface Context {
   bees: Bee[]
@@ -23,13 +24,12 @@ export interface Param {
   name: string
 }
 export interface Bee {
-  isDebugBee: boolean
   id: string
-  pos: Vector
-  vel: Vector
+  pos: V3
+  vel: V3
 }
 
 export type Canvas = {
-  center: Vector
-  dims: Vector
+  center: V3
+  dims: V3
 }

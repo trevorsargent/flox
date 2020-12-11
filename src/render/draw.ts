@@ -1,4 +1,5 @@
 import p5, { Vector } from 'p5'
+import { heading2d, scale } from '../lib'
 import { Context, Canvas, Bee } from '../types'
 
 // const WIDTH = 700
@@ -23,13 +24,13 @@ const drawBee = (p: p5, ctx: Context, bee: Bee) => {
     drawViewArea(p, ctx, bee)
   }
 
-  // drawDebugDir(bee)
-  // drawBeeOutline(bee)
+  // drawVelocityVector(p, bee)
+  // drawViewArea(p, ctx, bee)
 }
 
 const drawVelocityVector = (p: p5, bee: Bee) => {
   const { pos, vel } = bee
-  const scaled = vel.copy().mult(10)
+  const scaled = scale(10)(vel)
   p.stroke(200)
   p.line(pos.x, pos.y, pos.x + scaled.x, pos.y + scaled.y)
 }
@@ -42,8 +43,8 @@ const drawViewArea = (p: p5, ctx: Context, bee: Bee) => {
     bee.pos.y,
     (ctx.params.viewDistance.ref.value() as number) * 2,
     (ctx.params.viewDistance.ref.value() as number) * 2,
-    bee.vel.heading() - (ctx.params.viewAngle.ref.value() as number) / 2,
-    bee.vel.heading() + (ctx.params.viewAngle.ref.value() as number) / 2,
+    heading2d(bee.vel) - (ctx.params.viewAngle.ref.value() as number) / 2,
+    heading2d(bee.vel) + (ctx.params.viewAngle.ref.value() as number) / 2,
     p.PIE
   )
 }
