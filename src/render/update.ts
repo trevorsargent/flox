@@ -67,12 +67,12 @@ const calcSeparationForce = (ctx: Context, bee: Bee, neighbors: Bee[]): V3 => {
     return newV3(0, 0, 0)
   }
 
-  const influence = neighbors.reduce((f, n) => {
+  const influence = sum(neighbors.map(n => {
     const delta = sub(n.pos)(bee.pos)
     const scaled = scale(1 / magSquared(delta))(delta)
+    return scaled
+  }))
 
-    return add(f)(scaled)
-  }, newV3(0, 0, 0))
 
   return pipe(
     invert,
@@ -90,12 +90,12 @@ const calcCohesiveForce = (
   }
 
   const centerOfMass = average(neighbors.map((n) => n.pos))
-  const cohesiveForce = pipe(
-    normalize,
-    sub(bee.pos), // subtract from bee.pos...
-    scale(ctx.params.cohesiveForce.ref.value() as number)
-  )(centerOfMass)
 
+  const cohesiveForce = pipe(
+    sub(centerOfMass), // subtract from bee.pos...
+    normalize,
+    scale(ctx.params.cohesiveForce.ref.value() as number)
+  )(bee.pos)
   return cohesiveForce
 }
 

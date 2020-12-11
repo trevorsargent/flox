@@ -24,7 +24,7 @@ export const setup = (p: p5): Context => {
         name: 'Target Population'
       },
       viewDistance: {
-        ref: p.createSlider(0, 600, 300, 1),
+        ref: p.createSlider(0, 600, 200, 1),
         name: 'View Distance'
       },
       viewAngle: {
@@ -36,7 +36,7 @@ export const setup = (p: p5): Context => {
         name: 'Speed'
       },
       cohesiveForce: {
-        ref: p.createSlider(0, 30, 10, 0),
+        ref: p.createSlider(0, 30, 5, 0),
         name: 'Cohesive Force'
       },
       alignmentForce: {
@@ -44,7 +44,7 @@ export const setup = (p: p5): Context => {
         name: 'Alignment Force'
       },
       separationForce: {
-        ref: p.createSlider(0, 30, 10, 0),
+        ref: p.createSlider(0, 30, 15, 0),
         name: 'Separation Force'
       }
     },
