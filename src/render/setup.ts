@@ -52,8 +52,11 @@ export const setup = (p: p5): Context => {
     }
   }
 
-  Object.entries(initialContext.params).forEach(([_, param], idx) => {
-    param.ref.position(initialContext.canvas.dims.x + 160, 100 + idx * 30)
+  Object.entries(initialContext.params).forEach(([_, param], idx, sliders) => {
+    const y = initialContext.canvas.dims.y - 10;
+    const x = idx / sliders.length * initialContext.canvas.dims.x 
+
+    param.ref.position(x, y)
   })
 
   return {
