@@ -4,13 +4,13 @@
   "main": "index.js",
   "dependencies": {
     "@types/p5": "^0.9.1",
-    "p5": "^1.0.0",
-    "uuid": "^8.2.0"
+    "p5": "^1.1.9",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@types/uuid": "^8.0.0",
-    "sass": "^1.26.10",
-    "typescript": "^3.9.6"
+    "@types/uuid": "^8.3.0",
+    "sass": "^1.30.0",
+    "typescript": "^3.9.7"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
