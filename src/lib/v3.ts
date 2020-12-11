@@ -1,3 +1,5 @@
+import {pipe} from 'ramda'
+
 // 
 // 
 // Types
@@ -24,30 +26,39 @@ export const mixComponents = (mix: (aa: number) => (bb: number) => number) => (a
     z: mix(a.z)(b.z)
 })
 
+export const addComponents = (a: V3) => a.x + a.y + a.z
+
 // 
 // 
 // Single Vector Operations
 
-export const invert = (a: V3): V3 => applyToComponents(c => -1 * c)(a)
+export const invert = applyToComponents(c => -1 * c)
 
-export const magSquared = (a: V3): number => {
-    const sq = applyToComponents(c => c * c)(a)   
-    return sq.x + sq.y + sq.z
-}
+export const magSquared = pipe(applyToComponents(c => c* c), addComponents)
 
-export const magnitude = (a: V3): number => Math.sqrt(magSquared(a))
+export const magnitude = pipe(magSquared, Math.sqrt)
 
 export const normalize = (a: V3): V3 => {
     const mag = magnitude(a)
     return applyToComponents(c => c / mag)(a)
 }
 
-export const scale = (scale: number) => (a: V3): V3 => applyToComponents(c => c * scale)(a)
+export const scale = (scale: number) => 
+    applyToComponents(c => c * scale)
 
 // 
 // 
 // Two Vector Operations
 
-export const add = (a: V3) => (b: V3): V3 => mixComponents(aa => bb => aa + bb)(a)(b)
+export const add = mixComponents(aa => bb => aa + bb)
 
-export const sub = (a: V3) => (b: V3): V3 => add(a)(invert(b))
+export const sub = mixComponents(aa => bb => aa - bb)
+
+// 
+// 
+// Generation
+
+export const newV3 = (x: number, y: number, z: number): V3 => ({x, y, z})
+
+export const newNormalV3 = pipe(newV3, normalize)
+
