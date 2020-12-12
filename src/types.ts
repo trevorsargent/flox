@@ -1,5 +1,5 @@
 import p5, { Vector, Element } from 'p5'
-import { V3 } from './lib'
+import { V3 } from './lib/v3'
 
 export interface Context {
   bees: Bee[]
@@ -17,6 +17,7 @@ export interface Context {
     showViewArea: boolean
     showVelocityVectors: boolean
   }
+  zones: ZoneCache
 }
 
 export interface Param {
@@ -33,3 +34,5 @@ export type Canvas = {
   center: V3
   dims: V3
 }
+
+export type ZoneCache = number[][][]

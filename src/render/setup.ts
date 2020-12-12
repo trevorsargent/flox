@@ -1,7 +1,7 @@
 import { Context, Canvas } from '../types'
 import p5 from 'p5'
 import { newBee } from '../bee'
-import { newV3 } from '../lib'
+import { newV3 } from '../lib/v3'
 
 export const setup = (p: p5): Context => {
   const WIDTH = 1000
@@ -51,7 +51,8 @@ export const setup = (p: p5): Context => {
     debugOptions: {
       showViewArea: false,
       showVelocityVectors: false
-    }
+    },
+    zones: undefined
   }
 
   Object.entries(initialContext.params).forEach(([_, param], idx, sliders) => {

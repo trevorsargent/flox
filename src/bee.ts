@@ -1,6 +1,6 @@
 import { Context, Bee } from './types'
 import * as uuid from 'uuid'
-import { newNormalV3 } from './lib'
+import { newNormalV3 } from './lib/v3'
 
 export const newBee = (
   ctx: Context,

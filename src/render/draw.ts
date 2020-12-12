@@ -1,5 +1,5 @@
 import p5, { Vector } from 'p5'
-import { heading2d, scale } from '../lib'
+import { heading2d, scale } from '../lib/v3'
 import { Context, Canvas, Bee } from '../types'
 
 // const WIDTH = 700
@@ -23,9 +23,6 @@ const drawBee = (p: p5, ctx: Context, bee: Bee) => {
   if (ctx.debugOptions.showViewArea) {
     drawViewArea(p, ctx, bee)
   }
-
-  // drawVelocityVector(p, bee)
-  // drawViewArea(p, ctx, bee)
 }
 
 const drawVelocityVector = (p: p5, bee: Bee) => {
