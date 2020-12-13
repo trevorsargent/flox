@@ -49,10 +49,29 @@ const applyVelocities = (ctx: Context) => (bee: Bee): void => {
   )(bee.vel)
 
   const newPos = newV3(
-    (bee.pos.x + ctx.canvas.dims.x + vv.x) % ctx.canvas.dims.x,
-    (bee.pos.y + ctx.canvas.dims.y + vv.y) % ctx.canvas.dims.y,
+    (bee.pos.x + ctx.canvas.dims.x + vv.x),
+    (bee.pos.y + ctx.canvas.dims.y + vv.y),
     0
   )
+
+    const boundary = .8
+
+  if(newPos.x > boundary* ctx.canvas.dims.x / 2){
+    newPos.x = newPos.x - ctx.canvas.dims.x - 1
+  }
+
+  if(newPos.x < -1 * boundary * ctx.canvas.dims.x / 2){
+    newPos.x = newPos.x + ctx.canvas.dims.x + 1
+  }
+
+  if(newPos.y > boundary * ctx.canvas.dims.y / 2){
+    newPos.y = newPos.y - ctx.canvas.dims.y
+  }
+
+   if(newPos.y < -1 * boundary * ctx.canvas.dims.y / 2){
+    newPos.y = newPos.y + ctx.canvas.dims.y
+  }
+
 
   if(!newPos.x || !newPos.y){
     throw new Error('not a valid position')

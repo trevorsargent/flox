@@ -17,7 +17,7 @@ export const getNeighbors = (ctx: Context, bee: Bee): Bee[] => {
 
     const {numHorzChunks, numVertChunks, chunkH, chunkW} = getChunkInfo(ctx)
 
-    const {chunkX, chunkY} = getBeeChunk(bee, chunkW, chunkH)
+    const {chunkX, chunkY} = getBeeChunk(ctx, bee, chunkW, chunkH)
 
     const xOffset = bee.vel.x > 0 ? 1 : -1
     const yOffset = bee.vel.y > 0 ? 1 : -1
@@ -66,17 +66,21 @@ const isNeighborBee = (ctx: Context, thisBee: Bee) => (thatBee: Bee) => {
     const cache: ZoneCache = new Array(numHorzChunks).fill(null).map(_ => new Array(numVertChunks).fill([]))
     ctx.bees.forEach((bee, idx) => {
 
-        const { chunkX, chunkY } = getBeeChunk(bee, chunkW, chunkH)
-     
+        const { chunkX, chunkY } = getBeeChunk(ctx, bee, chunkW, chunkH)
+
+        if(!cache[chunkX][chunkY]){
+          throw new Error(`chunk out of bounds!: x: ${chunkX}, y: ${chunkY} out of ${numHorzChunks} / ${numVertChunks}`)
+        }
+
         cache[chunkX][chunkY].push(idx)
     })
 
     ctx.zones = cache
   }
 
-function getBeeChunk(bee: Bee, chunkW: number, chunkH: number) {
-    const chunkX = Math.floor(bee.pos.x / chunkW)
-    const chunkY = Math.floor(bee.pos.y / chunkH)
+function getBeeChunk(ctx: Context, bee: Bee, chunkW: number, chunkH: number) {
+    const chunkX = Math.floor((bee.pos.x + (ctx.canvas.dims.x / 2 )) / chunkW)
+    const chunkY = Math.floor((bee.pos.y + (ctx.canvas.dims.y / 2 )) / chunkH)
     return { chunkX, chunkY }
 }
 
@@ -85,10 +89,8 @@ function getChunkInfo(ctx: Context) {
     const height = ctx.canvas.dims.y
     const viewDistance = ctx.params.viewDistance.cache
 
-    
-
     const numHorzChunks = Math.floor(width / viewDistance)
-    const numVertChunks = Math.floor(height / viewDistance)
+    const numVertChunks = Math.floor(height / viewDistance) 
 
     const chunkW = width / numHorzChunks
     const chunkH = height / numVertChunks

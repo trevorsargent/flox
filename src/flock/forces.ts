@@ -6,14 +6,14 @@ export const calcSeparationForce = (ctx: Context, bee: Bee, neighbors: Bee[]): I
     if (neighbors.length === 0) {
       return newV3(0, 0, 0)
     }
-  
+    
     const influence = sum(neighbors.map(n => {
       const delta = sub(n.pos)(bee.pos)
-      const scaled = scale(1 / magSquared(delta))(delta)
+      const mag = magSquared(delta)
+      const scaled = scale(1 / mag > 0 ? mag : 1)(delta)
       return scaled
     }))
-  
-  
+    
     return pipe(
       invert,
       scale(ctx.params.separationForce.ref.value() as number)
@@ -51,10 +51,10 @@ export  const calcAlignmentForce = (
     const weightedHeading = average(
       neighbors.map((n) => {
         const delta = sub(n.pos)(bee.pos)
-        return scale(1 / magSquared(delta))(n.vel)
+        const mag = magSquared(delta)
+        return scale(1 / mag > 0? mag : 1)(n.vel)
       })
     )
-  
     const influence = scale(ctx.params.alignmentForce.cache)(
       weightedHeading
     )

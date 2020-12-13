@@ -9,12 +9,15 @@ export const draw = (p: p5, ctx: Context):void => {
 }
 
 const drawBee = (p: p5, ctx: Context, bee: Bee): void => {
-  const beeSize = 7
+  const beeSize = 3
   const beeShade = 5
 
-  p.fill(p.color(beeShade))
-  p.noStroke()
-  p.circle(bee.pos.x, bee.pos.y, beeSize)
+  
+
+  p.push()
+  p.translate(bee.pos.x, bee.pos.y, bee.pos.z)
+  p.sphere(beeSize)
+  p.pop()
 
   if (ctx.debugOptions.showVelocityVectors) {
     drawVelocityVector(p, bee)

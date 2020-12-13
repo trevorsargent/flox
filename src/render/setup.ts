@@ -8,11 +8,11 @@ export const setup = (ctx: Context, p: p5): void => {
   const HEIGHT = WIDTH / 1.618
 
   const canvas: Canvas = {
-    center: newV3(WIDTH / 2, HEIGHT / 2, 0),
+    center: newV3(0,0, 0),
     dims: newV3(WIDTH, HEIGHT, 0)
   }
 
-  p.createCanvas(canvas.dims.x, canvas.dims.y)
+  p.createCanvas(canvas.dims.x, canvas.dims.y, p.WEBGL)
 
   const initialContext: Context = {
     bees: [],
