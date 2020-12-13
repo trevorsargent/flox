@@ -3,7 +3,7 @@ import p5 from 'p5'
 import { newBee } from '../bee'
 import { newV3 } from '../lib/v3'
 
-export const setup = (p: p5): Context => {
+export const setup = (ctx: Context, p: p5): void => {
   const WIDTH = 1000
   const HEIGHT = WIDTH / 1.618
 
@@ -14,38 +14,44 @@ export const setup = (p: p5): Context => {
 
   p.createCanvas(canvas.dims.x, canvas.dims.y)
 
-
   const initialContext: Context = {
     bees: [],
     canvas,
     params: {
       targetPopulation: {
         ref: p.createSlider(0, 250, 150, 1),
-        name: 'Target Population'
+        name: 'Target Population',
+        cache: null
       },
       viewDistance: {
         ref: p.createSlider(0, 600, 200, 1),
-        name: 'View Distance'
+        name: 'View Distance',
+        cache: null
       },
       viewAngle: {
         ref: p.createSlider(0, p.PI * 2, p.PI, 0),
-        name: 'View Angle'
+        name: 'View Angle',
+        cache: null
       },
       speedMultiplier: {
         ref: p.createSlider(0, 10, 5, 0),
-        name: 'Speed'
+        name: 'Speed',
+        cache: null
       },
       cohesiveForce: {
         ref: p.createSlider(0, 30, 5, 0),
-        name: 'Cohesive Force'
+        name: 'Cohesive Force',
+        cache: null
       },
       alignmentForce: {
         ref: p.createSlider(0, 30, 10, 0),
-        name: 'Alignment Force'
+        name: 'Alignment Force',
+        cache: null
       },
       separationForce: {
         ref: p.createSlider(0, 30, 15, 0),
-        name: 'Separation Force'
+        name: 'Separation Force',
+        cache: null
       }
     },
     debugOptions: {
@@ -62,10 +68,7 @@ export const setup = (p: p5): Context => {
     param.ref.position(x, y)
   })
 
-  const ctx =  {
-    ...initialContext,
-    bees: [newBee(initialContext)]
-  }
+  Object.assign(ctx, initialContext)
+  ctx.bees.push(newBee(initialContext))
 
-  return ctx
 }

@@ -4,10 +4,26 @@ import { pipe } from 'ramda'
 //
 // Types
 
-export interface V3 {
+export interface I3 {
   x: number
   y: number
   z: number
+}
+
+export class  V3 implements I3 {
+  x: number
+  y: number
+  z: number
+
+  constructor(init: I3){
+    this.set(init)
+  }
+
+  set({x, y, z}: I3): void{
+    this.x = x
+    this.y = y
+    this.z = z
+  }
 }
 
 //
@@ -15,22 +31,22 @@ export interface V3 {
 // Utils
 
 export const applyToComponents = (apply: (c: number) => number) => (
-  a: V3
-): V3 => ({
+  a: I3
+): I3 => ({
   x: apply(a.x),
   y: apply(a.y),
   z: apply(a.z)
 })
 
 export const mixComponents = (mix: (aa: number) => (bb: number) => number) => (
-  a: V3
-) => (b: V3) => ({
+  a: I3
+) => (b: I3) => ({
   x: mix(a.x)(b.x),
   y: mix(a.y)(b.y),
   z: mix(a.z)(b.z)
 })
 
-export const addComponents = (a: V3) => a.x + a.y + a.z
+export const addComponents = (a: I3) => a.x + a.y + a.z
 
 //
 //
@@ -38,7 +54,7 @@ export const addComponents = (a: V3) => a.x + a.y + a.z
 
 export const invert = applyToComponents((c) => -1 * c)
 
-export const normalize = (a: V3): V3 => {
+export const normalize = (a: I3): I3 => {
   const mag = magnitude(a)
   const safeMag = mag > 0 ? mag : 1
   
@@ -59,16 +75,16 @@ export const sub = mixComponents((aa) => (bb) => aa - bb)
 //
 // N Vector Operations
 
-export const sum = (set: V3[]) =>
+export const sum = (set: I3[]) =>
   set.reduce((sum, next) => add(sum)(next), newV3(0, 0, 0))
 
-export const average = (set: V3[]) => pipe(sum, scale(1 / set.length))(set)
+export const average = (set: I3[]) => pipe(sum, scale(1 / set.length))(set)
 
 //
 //
 // Generation
 
-export const newV3 = (x: number, y: number, z: number): V3 => ({ x, y, z })
+export const newV3 = (x: number, y: number, z: number): I3 => ({ x, y, z })
 
 export const newNormalV3 = pipe(newV3, normalize)
 
@@ -83,4 +99,4 @@ export const magSquared = pipe(
 
 export const magnitude = pipe(magSquared, Math.sqrt)
 
-export const heading2d = (a: V3) => Math.atan2(a.y, a.x)
+export const heading2d = (a: I3) => Math.atan2(a.y, a.x)

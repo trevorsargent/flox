@@ -52,7 +52,7 @@ const isNeighborBee = (ctx: Context, thisBee: Bee) => (thatBee: Bee) => {
   
     if (
       Math.abs(heading2d(delta) - heading2d(thisBee.vel)) >
-      (ctx.params.viewAngle.ref.value() as number) / 2
+      (ctx.params.viewAngle.cache) / 2
     ) {
       return false
     }
@@ -60,7 +60,7 @@ const isNeighborBee = (ctx: Context, thisBee: Bee) => (thatBee: Bee) => {
     return true
   }
 
-  export const updateZoneCache = (ctx: Context): Context => {
+  export const updateZoneCache = (ctx: Context): void => {
     const { numHorzChunks, numVertChunks, chunkW, chunkH } = getChunkInfo(ctx)
 
     const cache: ZoneCache = new Array(numHorzChunks).fill(null).map(_ => new Array(numVertChunks).fill([]))
@@ -70,16 +70,11 @@ const isNeighborBee = (ctx: Context, thisBee: Bee) => (thatBee: Bee) => {
      
         cache[chunkX][chunkY].push(idx)
     })
-    return {
-        ...ctx,
-        zones: cache
-    }
 
+    ctx.zones = cache
   }
 
 function getBeeChunk(bee: Bee, chunkW: number, chunkH: number) {
-
-
     const chunkX = Math.floor(bee.pos.x / chunkW)
     const chunkY = Math.floor(bee.pos.y / chunkH)
     return { chunkX, chunkY }
@@ -88,7 +83,9 @@ function getBeeChunk(bee: Bee, chunkW: number, chunkH: number) {
 function getChunkInfo(ctx: Context) {
     const width = ctx.canvas.dims.x
     const height = ctx.canvas.dims.y
-    const viewDistance = ctx.params.viewDistance.ref.value() as number
+    const viewDistance = ctx.params.viewDistance.cache
+
+    
 
     const numHorzChunks = Math.floor(width / viewDistance)
     const numVertChunks = Math.floor(height / viewDistance)

@@ -1,8 +1,8 @@
 import { pipe } from "ramda"
-import { average, invert, magSquared, newV3, normalize, scale, sub, sum, V3 } from "../lib/v3"
+import { average, I3, invert, magSquared, newV3, normalize, scale, sub, sum, V3 } from "../lib/v3"
 import { Bee, Context } from "../types"
 
-export const calcSeparationForce = (ctx: Context, bee: Bee, neighbors: Bee[]): V3 => {
+export const calcSeparationForce = (ctx: Context, bee: Bee, neighbors: Bee[]): I3 => {
     if (neighbors.length === 0) {
       return newV3(0, 0, 0)
     }
@@ -43,7 +43,7 @@ export  const calcAlignmentForce = (
     ctx: Context,
     bee: Bee,
     neighbors: Bee[]
-  ): V3 => {
+  ): I3 => {
     if (neighbors.length === 0) {
       return newV3(0,0,0)
     }
@@ -55,7 +55,7 @@ export  const calcAlignmentForce = (
       })
     )
   
-    const influence = scale(ctx.params.alignmentForce.ref.value() as number)(
+    const influence = scale(ctx.params.alignmentForce.cache)(
       weightedHeading
     )
     return influence

@@ -3,12 +3,12 @@ import { heading2d, scale } from '../lib/v3'
 import { Context, Canvas, Bee } from '../types'
 
 // const WIDTH = 700
-export const draw = (p: p5, ctx: Context) => {
+export const draw = (p: p5, ctx: Context):void => {
   p.clear()
   ctx.bees.forEach((bee) => drawBee(p, ctx, bee))
 }
 
-const drawBee = (p: p5, ctx: Context, bee: Bee) => {
+const drawBee = (p: p5, ctx: Context, bee: Bee): void => {
   const beeSize = 7
   const beeShade = 5
 

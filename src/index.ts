@@ -5,14 +5,18 @@ import { Context } from './types'
 import { update } from './render/update'
 
 function sketch(p: p5) {
-  let ctx: Context
+  const ctx: Context = {} as Context
 
   p.setup = () => {
-    ctx = setup(p)
+    setup(ctx, p)
+    update(ctx)
+    setInterval(() => {
+      update(ctx)
+    }, 33)
+
   }
 
   p.draw = () => {
-    ctx = update(ctx)
     draw(p, ctx)
   }
 }
