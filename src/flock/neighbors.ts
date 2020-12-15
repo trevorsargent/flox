@@ -1,98 +1,89 @@
-import { uniq } from "ramda"
-import { heading2d, magnitude, sub } from "../lib/v3"
-import { Bee, Context, ZoneCache } from "../types"
-
-export const clamp = (min: number, max: number, value: number) => {
-    if(value < min){
-        return min
-    }
-
-    if(value >= max){
-        return max -1
-    }
-    return value
-}
+import { pipe, tryCatch, uniq } from 'ramda'
+import {
+  applyToComponents,
+  heading2d,
+  I3,
+  magnitude,
+  normalize,
+  scale,
+  sub
+} from '../lib/v3'
+import { Bee, Context, SmartMap, ZoneCache } from '../types'
 
 export const getNeighbors = (ctx: Context, bee: Bee): Bee[] => {
+  const chunk = getBeeChunk(ctx, bee)
 
-    const {numHorzChunks, numVertChunks, chunkH, chunkW} = getChunkInfo(ctx)
+  const neighbors = new Set<Bee>()
 
-    const {chunkX, chunkY} = getBeeChunk(ctx, bee, chunkW, chunkH)
+  for (let x = chunk.x - 1; x <= chunk.x + 1; x++) {
+    for (let y = chunk.y - 1; y <= chunk.y + 1; y++) {
+      for (let z = chunk.z - 1; z <= chunk.y + 1; z++) {
+        for (const b of ctx.zones.get(x).get(y).get(z).values()) {
+          neighbors.add(b)
+        }
+      }
+    }
+  }
+  // console.log("get Neighbors", ctx.zones)
 
-    const xOffset = bee.vel.x > 0 ? 1 : -1
-    const yOffset = bee.vel.y > 0 ? 1 : -1
+  // return ctx.bees.filter(isNeighborBee(ctx, bee))
 
-    const xs = uniq([clamp(0, numHorzChunks, chunkX + xOffset), chunkX])
-    const ys = uniq([clamp(0, numVertChunks, chunkY + yOffset), chunkY])
-
-    // console.log("get Neighbors", ctx.zones)
-
-     const neighbors = xs.map(x => {
-       return ys.map(y => {
-            // console.log(x, y)
-            return ctx.zones[x][y].map(idx => ctx.bees[idx])
-        }).flat()
-    }).flat().filter(isNeighborBee(ctx, bee))
-
-
-    return neighbors
-
+  return Array.from(neighbors).filter(isNeighborBee(ctx, bee))
 }
 
 const isNeighborBee = (ctx: Context, thisBee: Bee) => (thatBee: Bee) => {
-    if (thisBee.id === thatBee.id) {
-      return false
-    }
-  
-    const delta = sub(thatBee.pos)(thisBee.pos)
-  
-    if (magnitude(delta) > ctx.params.viewDistance.ref.value()) {
-      return false
-    }
-  
-    if (
-      Math.abs(heading2d(delta) - heading2d(thisBee.vel)) >
-      (ctx.params.viewAngle.cache) / 2
-    ) {
-      return false
-    }
-  
-    return true
+  if (thisBee.id === thatBee.id) {
+    return false
   }
 
-  export const updateZoneCache = (ctx: Context): void => {
-    const { numHorzChunks, numVertChunks, chunkW, chunkH } = getChunkInfo(ctx)
+  const delta = sub(thatBee.pos)(thisBee.pos)
 
-    const cache: ZoneCache = new Array(numHorzChunks).fill(null).map(_ => new Array(numVertChunks).fill([]))
-    ctx.bees.forEach((bee, idx) => {
-
-        const { chunkX, chunkY } = getBeeChunk(ctx, bee, chunkW, chunkH)
-
-        if(!cache[chunkX][chunkY]){
-          throw new Error(`chunk out of bounds!: x: ${chunkX}, y: ${chunkY} out of ${numHorzChunks} / ${numVertChunks}`)
-        }
-
-        cache[chunkX][chunkY].push(idx)
-    })
-
-    ctx.zones = cache
+  if (magnitude(delta) > ctx.params.viewDistance.ref.value()) {
+    return false
   }
 
-function getBeeChunk(ctx: Context, bee: Bee, chunkW: number, chunkH: number) {
-    const chunkX = Math.floor((bee.pos.x + (ctx.canvas.dims.x / 2 )) / chunkW)
-    const chunkY = Math.floor((bee.pos.y + (ctx.canvas.dims.y / 2 )) / chunkH)
-    return { chunkX, chunkY }
+  if (
+    Math.abs(heading2d(delta) - heading2d(thisBee.vel)) >
+    ctx.params.viewAngle.cache / 2
+  ) {
+    return false
+  }
+
+  return true
 }
 
-function getChunkInfo(ctx: Context) {
-    const width = ctx.canvas.dims.x
-    const height = ctx.canvas.dims.y
-    const viewDistance = ctx.params.viewDistance.cache
+export const updateZoneCache = (ctx: Context): void => {
+  ctx.zones = undefined
 
-    const numHorzChunks = Math.floor(width / viewDistance)
-    const numVertChunks = Math.floor(height / viewDistance) 
+  ctx.zones = new SmartMap( // x
+    () =>
+      new SmartMap( // y
+        () =>
+          new SmartMap( // z
+            () => new Set<Bee>() // there they are!
+          )
+      )
+  )
 
-    const chunkW = width / numHorzChunks
-    const chunkH = height / numVertChunks
-    return { numHorzChunks, numVertChunks, chunkW, chunkH }
+  ctx.bees.forEach((bee) => {
+    const chunk = getBeeChunk(ctx, bee)
+
+    const x = ctx.zones.get(chunk.x)
+
+    const y = x.get(chunk.y)
+
+    const z = y.get(chunk.z)
+
+    z.add(bee)
+  })
+}
+
+function getBeeChunk(ctx: Context, bee: Bee): I3 {
+  const resolution = ctx.params.viewDistance.cache
+
+  const chunk: I3 = applyToComponents((c) => Math.floor(c / resolution))(
+    bee.pos
+  )
+
+  return chunk
 }

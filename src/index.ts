@@ -10,13 +10,13 @@ function sketch(p: p5) {
   p.setup = () => {
     setup(ctx, p)
     update(ctx)
-    setInterval(() => {
-      update(ctx)
-    }, 33)
-
+    // setInterval(() => {
+    //   update(ctx)
+    // }, 33)
   }
 
   p.draw = () => {
+    update(ctx)
     draw(p, ctx)
   }
 }

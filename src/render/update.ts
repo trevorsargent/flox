@@ -23,11 +23,11 @@ import {
 import { getNeighbors, updateZoneCache } from '../flock/neighbors'
 
 export const update = (ctx: Context): void => {
-    cacheSliderValues(ctx),
+  cacheSliderValues(ctx),
     updateFlockPopulation(ctx),
     updateZoneCache(ctx),
     updateFlockVelocities(ctx),
-    updateFlockPositions(ctx)  
+    updateFlockPositions(ctx)
 }
 
 const updateFlockVelocities = (ctx: Context): void => {
@@ -39,41 +39,43 @@ const updateFlockPositions = (ctx: Context): void => {
 }
 
 const updateFlockPopulation = (ctx: Context): void => {
-ensurePopulation(ctx)
+  ensurePopulation(ctx)
 }
 
 const applyVelocities = (ctx: Context) => (bee: Bee): void => {
-  const vv = pipe(
-    normalize,
-    scale(ctx.params.speedMultiplier.cache)
-  )(bee.vel)
+  const vv = pipe(normalize, scale(ctx.params.speedMultiplier.cache))(bee.vel)
 
   const newPos = newV3(
-    (bee.pos.x + ctx.canvas.dims.x + vv.x),
-    (bee.pos.y + ctx.canvas.dims.y + vv.y),
+    bee.pos.x + ctx.canvas.dims.x + vv.x,
+    bee.pos.y + ctx.canvas.dims.y + vv.y,
     0
   )
 
-    const boundary = .8
-
-  if(newPos.x > boundary* ctx.canvas.dims.x / 2){
+  if (newPos.x > ctx.canvas.dims.x / 2) {
     newPos.x = newPos.x - ctx.canvas.dims.x - 1
   }
 
-  if(newPos.x < -1 * boundary * ctx.canvas.dims.x / 2){
+  if (newPos.x < (-1 * ctx.canvas.dims.x) / 2) {
     newPos.x = newPos.x + ctx.canvas.dims.x + 1
   }
 
-  if(newPos.y > boundary * ctx.canvas.dims.y / 2){
+  if (newPos.y > ctx.canvas.dims.y / 2) {
     newPos.y = newPos.y - ctx.canvas.dims.y
   }
 
-   if(newPos.y < -1 * boundary * ctx.canvas.dims.y / 2){
+  if (newPos.y < (-1 * ctx.canvas.dims.y) / 2) {
     newPos.y = newPos.y + ctx.canvas.dims.y
   }
 
+  if (newPos.z > ctx.canvas.dims.x / 2) {
+    newPos.z = newPos.z - ctx.canvas.dims.x
+  }
 
-  if(!newPos.x || !newPos.y){
+  if (newPos.z < (-1 * ctx.canvas.dims.x) / 2) {
+    newPos.z = newPos.z + ctx.canvas.dims.x
+  }
+
+  if (!newPos.x || !newPos.y) {
     throw new Error('not a valid position')
   }
 
@@ -92,13 +94,13 @@ const applyForces = (ctx: Context) => (bee: Bee): void => {
 
   const newVelocity = pipe(add(bee.vel), normalize)(normal)
 
-  if(!newVelocity.x || !newVelocity.y){
-    console.log("numBees", ctx.bees.length)
-    console.log("neighbors", neighbors)
-    console.log("cohesive", cohesive)
-    console.log("alignment", alignment)
-    console.log("separation", separation)
-    console.log("forces", forces)
+  if (!newVelocity.x || !newVelocity.y) {
+    console.log('numBees', ctx.bees.length)
+    console.log('neighbors', neighbors)
+    console.log('cohesive', cohesive)
+    console.log('alignment', alignment)
+    console.log('separation', separation)
+    console.log('forces', forces)
     throw new Error('not a valid velocity')
   }
 
@@ -118,7 +120,7 @@ const ensurePopulation = (ctx: Context): void => {
 }
 
 const cacheSliderValues = (ctx: Context): void => {
-  Object.values(ctx.params).forEach(param => {
+  Object.values(ctx.params).forEach((param) => {
     param.cache = param.ref.value() as number
   })
 }

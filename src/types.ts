@@ -31,9 +31,33 @@ export interface Bee {
   vel: V3
 }
 
-export type Canvas = {
+export interface Canvas {
   center: I3
   dims: I3
 }
 
-export type ZoneCache = number[][][]
+export type ZoneCache = SmartMap<
+  number,
+  SmartMap<number, SmartMap<number, Set<Bee>>>
+>
+
+export class SmartMap<T, U> {
+  private map: Map<T, U>
+
+  constructor(private newFunc: () => U) {
+    this.map = new Map<T, U>()
+  }
+
+  get(key: T) {
+    try {
+      const g = this.map.get(key)
+      if (!g) {
+        throw 1
+      }
+      return this.map.get(key)
+    } catch {
+      this.map.set(key, this.newFunc())
+      return this.map.get(key)
+    }
+  }
+}
