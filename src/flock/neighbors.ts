@@ -42,11 +42,11 @@ const isNeighborBee = (ctx: Context, thisBee: Bee) => (thatBee: Bee) => {
 
   const delta = sub(thatBee.pos)(thisBee.pos)
 
-  if (magnitude(delta) > ctx.params.viewDistance.cache) {
+  if (magnitude(delta) > ctx.params.viewDistance) {
     return false
   }
 
-  if (angleBetween(delta)(thisBee.vel) > ctx.params.viewAngle.cache / 2) {
+  if (angleBetween(delta)(thisBee.vel) > ctx.params.viewAngle / 2) {
     return false
   }
 
@@ -73,7 +73,7 @@ export const updateZoneCache = (ctx: Context): void => {
 }
 
 function getBeeChunk(ctx: Context, bee: Bee): I3 {
-  const resolution = ctx.params.viewDistance.cache
+  const resolution = ctx.params.viewDistance
 
   const chunk: I3 = applyToComponents((c) => Math.floor(c / resolution))(
     bee.pos

@@ -1,19 +1,32 @@
-import p5, { Vector, Element } from 'p5'
 import { I3, V3 } from './lib/v3'
+import { setup } from './render/setup'
+import { tick } from './render/update'
+
+export class Flock {
+  public readonly context: Context
+
+  constructor() {
+    this.context = setup()
+  }
+
+  bees() {
+    return this.context.bees
+  }
+
+  update(params?: ParamSet<Param>) {
+    if (params) {
+      Object.assign(this.context.params, params)
+    }
+
+    tick(this.context)
+  }
+}
 
 export interface Context {
   bees: Bee[]
-  canvas: Canvas
+  // canvas: Canvas
   bounds: I3
-  params: {
-    targetPopulation: Param
-    viewDistance: Param
-    viewAngle: Param
-    maxSpeed: Param
-    cohesiveForce: Param
-    separationForce: Param
-    alignmentForce: Param
-  }
+  params: ParamSet<Param>
   debugOptions: {
     showViewArea: boolean
     showVelocityVectors: boolean
@@ -21,11 +34,18 @@ export interface Context {
   zones: ZoneCache
 }
 
-export interface Param {
-  ref: Element
-  name: string
-  cache: number
+export type Param = number
+
+export type ParamSet<T> = {
+  targetPopulation: T
+  viewDistance: T
+  viewAngle: T
+  maxSpeed: T
+  cohesiveForce: T
+  separationForce: T
+  alignmentForce: T
 }
+
 export interface Bee {
   id: string
   pos: V3

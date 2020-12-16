@@ -1,21 +1,6 @@
 import { Context, Bee } from '../types'
 import { newBee } from '../bee'
-import {
-  add,
-  average,
-  clampMagnitude,
-  heading2d,
-  invert,
-  magnitude,
-  magSquared,
-  newV3,
-  normalize,
-  scale,
-  sub,
-  sum,
-  V3
-} from '../lib/v3'
-import { pipe } from 'ramda'
+import { add, clampMagnitude, newV3, scale, sum } from '../lib/v3'
 import {
   calcAlignmentForce,
   calcBoundingForce,
@@ -24,9 +9,8 @@ import {
 } from '../flock/forces'
 import { getNeighbors, updateZoneCache } from '../flock/neighbors'
 
-export const update = (ctx: Context): void => {
-  cacheSliderValues(ctx),
-    updateFlockPopulation(ctx),
+export const tick = (ctx: Context): void => {
+  updateFlockPopulation(ctx),
     // updateZoneCache(ctx),
     updateFlockVelocities(ctx),
     updateFlockPositions(ctx)
@@ -48,22 +32,6 @@ const applyVelocities = (ctx: Context) => (bee: Bee): void => {
   const vv = bee.vel
 
   const newPos = newV3(bee.pos.x + vv.x, bee.pos.y + vv.y, bee.pos.z + vv.z)
-
-  // if (newPos.x > ctx.canvas.dims.x / 2) {
-  //   newPos.x = newPos.x - ctx.canvas.dims.x - 1
-  // }
-
-  // if (newPos.x < (-1 * ctx.canvas.dims.x) / 2) {
-  //   newPos.x = newPos.x + ctx.canvas.dims.x + 1
-  // }
-
-  // if (newPos.y > ctx.canvas.dims.y / 2) {
-  //   newPos.y = newPos.y - ctx.canvas.dims.y
-  // }
-
-  // if (newPos.y < (-1 * ctx.canvas.dims.y) / 2) {
-  //   newPos.y = newPos.y + ctx.canvas.dims.y
-  // }
 
   bee.pos.set(newPos)
 }
@@ -92,13 +60,13 @@ const applyForces = (ctx: Context) => (bee: Bee): void => {
 
   const newVelocity = add(bee.vel)(normal)
 
-  const limited = clampMagnitude(2)(ctx.params.maxSpeed.cache)(newVelocity)
+  const limited = clampMagnitude(2)(ctx.params.maxSpeed)(newVelocity)
 
   bee.vel.set(limited)
 }
 
 const ensurePopulation = (ctx: Context): void => {
-  const target = ctx.params.targetPopulation.cache
+  const target = ctx.params.targetPopulation
 
   if (ctx.bees.length < target) {
     ctx.bees.push(newBee(ctx))
@@ -107,10 +75,4 @@ const ensurePopulation = (ctx: Context): void => {
   if (ctx.bees.length > target) {
     ctx.bees.shift()
   }
-}
-
-const cacheSliderValues = (ctx: Context): void => {
-  Object.values(ctx.params).forEach((param) => {
-    param.cache = param.ref.value() as number
-  })
 }

@@ -63,33 +63,4 @@ const drawBee = (p: p5, ctx: Context, bee: Bee): void => {
 
   p.sphere(beeSize)
   p.pop()
-
-  if (ctx.debugOptions.showVelocityVectors) {
-    drawVelocityVector(p, bee)
-  }
-
-  if (ctx.debugOptions.showViewArea) {
-    drawViewArea(p, ctx, bee)
-  }
-}
-
-const drawVelocityVector = (p: p5, bee: Bee) => {
-  const { pos, vel } = bee
-  const scaled = scale(10)(vel)
-  p.stroke(200)
-  p.line(pos.x, pos.y, pos.x + scaled.x, pos.y + scaled.y)
-}
-
-const drawViewArea = (p: p5, ctx: Context, bee: Bee) => {
-  p.noFill()
-  p.stroke(200)
-  p.arc(
-    bee.pos.x,
-    bee.pos.y,
-    (ctx.params.viewDistance.ref.value() as number) * 2,
-    (ctx.params.viewDistance.ref.value() as number) * 2,
-    heading2d(bee.vel) - (ctx.params.viewAngle.ref.value() as number) / 2,
-    heading2d(bee.vel) + (ctx.params.viewAngle.ref.value() as number) / 2,
-    p.PIE
-  )
 }

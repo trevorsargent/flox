@@ -55,7 +55,7 @@ export const calcSeparationForce = (
 
   const separationForce = pipe(
     invert,
-    scale(ctx.params.separationForce.cache)
+    scale(ctx.params.separationForce)
   )(steering)
 
   return separationForce
@@ -73,7 +73,7 @@ export const calcCohesiveForce = (ctx: Context, bee: Bee, neighbors: Bee[]) => {
 
   const cohesiveForce = pipe(
     normalize,
-    scale(ctx.params.cohesiveForce.cache)
+    scale(ctx.params.cohesiveForce)
   )(steering)
 
   return cohesiveForce
@@ -101,7 +101,7 @@ export const calcAlignmentForce = (
 
   const alignmentForce = pipe(
     normalize,
-    scale(ctx.params.alignmentForce.cache)
+    scale(ctx.params.alignmentForce)
   )(steering)
 
   return alignmentForce
