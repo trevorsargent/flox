@@ -1,15 +1,13 @@
-import { pipe, tryCatch, uniq } from 'ramda'
+import { SmartMap } from '../../lib/smartMap'
 import {
   angleBetween,
   applyToComponents,
-  heading2d,
   I3,
   magnitude,
-  normalize,
-  scale,
   sub
-} from '../lib/v3'
-import { Bee, Context, SmartMap, ZoneCache } from '../types'
+} from '../../lib/v3'
+import { Bee } from '../types/bee'
+import { Context } from '../types/flock'
 
 export const getNeighbors = (ctx: Context, bee: Bee): Bee[] => {
   const chunk = getBeeChunk(ctx, bee)

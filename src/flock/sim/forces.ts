@@ -1,4 +1,4 @@
-import { min, pipe } from 'ramda'
+import { pipe } from 'ramda'
 import {
   add,
   applyToComponents,
@@ -11,10 +11,10 @@ import {
   normalize,
   scale,
   sub,
-  sum,
-  V3
-} from '../lib/v3'
-import { Bee, Context } from '../types'
+  sum
+} from '../../lib/v3'
+import { Bee } from '../types/bee'
+import { Context } from '../types/flock'
 
 export const calcBoundingForce = (ctx: Context, bee: Bee): I3 => {
   const futurePos = add(bee.pos)(scale(8)(bee.vel))

@@ -1,7 +1,6 @@
-import p5, { Vector } from 'p5'
-import { pipe } from 'ramda'
-import { applyToComponents, heading2d, normalize, scale } from '../lib/v3'
-import { Context, Canvas, Bee } from '../types'
+import p5 from 'p5'
+import { Bee } from '../flock/types/bee'
+import { Context } from '../flock/types/flock'
 
 // const WIDTH = 700
 export const draw = (p: p5, ctx: Context): void => {

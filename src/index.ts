@@ -1,6 +1,6 @@
 import p5, { Element } from 'p5'
+import { Flock, ParamSet } from './flock/types/flock'
 import { draw } from './render/draw'
-import { Flock, ParamSet } from './types'
 
 interface ParamSliderInfo {
   ref: Element

@@ -1,13 +1,13 @@
-import { Context, Bee } from '../types'
-import { newBee } from '../bee'
-import { add, clampMagnitude, newV3, scale, sum } from '../lib/v3'
+import { add, clampMagnitude, newV3, scale, sum } from '../../lib/v3'
+import { Bee } from '../types/bee'
+import { Context } from '../types/flock'
 import {
   calcAlignmentForce,
   calcBoundingForce,
   calcCohesiveForce,
   calcSeparationForce
-} from '../flock/forces'
-import { getNeighbors, updateZoneCache } from '../flock/neighbors'
+} from './forces'
+import { getNeighbors, updateZoneCache } from './neighbors'
 
 export const tick = (ctx: Context): void => {
   updateFlockPopulation(ctx),
@@ -69,7 +69,7 @@ const ensurePopulation = (ctx: Context): void => {
   const target = ctx.params.targetPopulation
 
   if (ctx.bees.length < target) {
-    ctx.bees.push(newBee(ctx))
+    ctx.bees.push(new Bee())
   }
 
   if (ctx.bees.length > target) {

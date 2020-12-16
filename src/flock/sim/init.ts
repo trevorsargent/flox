@@ -1,13 +1,9 @@
-import { Context, Canvas } from '../types'
-import p5 from 'p5'
-import { newBee } from '../bee'
-import { newV3 } from '../lib/v3'
+import { Bee } from '../types/bee'
+import { Context } from '../types/flock'
 
-export const setup = (): Context => {
-  const ctx = {} as Context
-
-  const initialContext: Context = {
-    bees: [],
+export const init = (): Context => {
+  return {
+    bees: [new Bee()],
     params: {
       // bees
       targetPopulation: null,
@@ -31,8 +27,4 @@ export const setup = (): Context => {
     },
     zones: undefined
   }
-
-  Object.assign(ctx, initialContext)
-  ctx.bees.push(newBee(initialContext))
-  return ctx
 }
