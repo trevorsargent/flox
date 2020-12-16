@@ -16,7 +16,7 @@ export const draw = (p: p5, ctx: Context): void => {
 
   p.fill(255)
 
-  p.translate(0, 0, -400)
+  p.translate(0, 0, -2 * ctx.bounds.x + ctx.bounds.z)
   p.rotateY(p.frameCount * 0.005)
 
   // Set the Scene

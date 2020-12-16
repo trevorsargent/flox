@@ -33,7 +33,8 @@ export const setup = (ctx: Context, p: p5): void => {
         name: 'View Angle',
         cache: null
       },
-      speedMultiplier: {
+
+      maxSpeed: {
         ref: p.createSlider(0, 10, 5, 0),
         name: 'Speed',
         cache: null

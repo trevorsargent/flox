@@ -1,5 +1,6 @@
 import { pipe, tryCatch, uniq } from 'ramda'
 import {
+  angleBetween,
   applyToComponents,
   heading2d,
   I3,
@@ -28,11 +29,10 @@ export const getNeighbors = (ctx: Context, bee: Bee): Bee[] => {
   //     }
   //   }
   // }
-  // console.log("get Neighbors", ctx.zones)
 
   return ctx.bees.filter(isNeighborBee(ctx, bee))
 
-  return Array.from(neighbors).filter(isNeighborBee(ctx, bee))
+  // return Array.from(neighbors).filter(isNeighborBee(ctx, bee))
 }
 
 const isNeighborBee = (ctx: Context, thisBee: Bee) => (thatBee: Bee) => {
@@ -46,10 +46,7 @@ const isNeighborBee = (ctx: Context, thisBee: Bee) => (thatBee: Bee) => {
     return false
   }
 
-  if (
-    Math.abs(heading2d(delta) - heading2d(thisBee.vel)) >
-    ctx.params.viewAngle.cache / 2
-  ) {
+  if (angleBetween(delta)(thisBee.vel) > ctx.params.viewAngle.cache / 2) {
     return false
   }
 
@@ -71,14 +68,7 @@ export const updateZoneCache = (ctx: Context): void => {
 
   ctx.bees.forEach((bee) => {
     const chunk = getBeeChunk(ctx, bee)
-
-    const x = ctx.zones.get(chunk.x)
-
-    const y = x.get(chunk.y)
-
-    const z = y.get(chunk.z)
-
-    z.add(bee)
+    ctx.zones.get(chunk.x).get(chunk.y).get(chunk.z).add(bee)
   })
 }
 

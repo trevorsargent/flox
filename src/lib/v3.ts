@@ -1,4 +1,4 @@
-import { pipe } from 'ramda'
+import { compose, pipe } from 'ramda'
 
 //
 //
@@ -99,6 +99,25 @@ export const magSquared = pipe(
 
 export const magnitude = pipe(magSquared, Math.sqrt)
 
-export const dot = pipe(mixComponents((ac) => (bc) => ac * bc))
+export const clampMagnitude = (min: number) => (max: number) => (a: I3) => {
+  const mag = magnitude(a)
+
+  if (mag < min) {
+    return pipe(normalize, scale(min))(a)
+  }
+
+  if (mag > max) {
+    return pipe(normalize, scale(max))(a)
+  }
+
+  return a
+}
+
+export const dot = (a: I3) => (b: I3): number =>
+  addComponents(mixComponents((ac) => (bc) => ac * bc)(a)(b))
+
+export const angleBetween = (a: I3) => (b: I3): number => {
+  return Math.acos(dot(a)(b) / (magnitude(a) * magnitude(b)))
+}
 
 export const heading2d = (a: I3) => Math.atan2(a.y, a.x)

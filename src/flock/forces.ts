@@ -1,6 +1,7 @@
 import { min, pipe } from 'ramda'
 import {
   add,
+  applyToComponents,
   average,
   I3,
   invert,
@@ -16,11 +17,17 @@ import {
 import { Bee, Context } from '../types'
 
 export const calcBoundingForce = (ctx: Context, bee: Bee): I3 => {
-  const target = mixComponents((pos) => (bound) => {
-    return Math.abs(pos) > bound
-      ? -1 * (Math.abs(pos) - bound) * (Math.abs(pos) / pos) //
+  const futurePos = add(bee.pos)(scale(8)(bee.vel))
+
+  const boundBreak = sub(applyToComponents((c) => Math.abs(c))(futurePos))(
+    ctx.bounds
+  )
+
+  const target = mixComponents((vel) => (boundBr) => {
+    return boundBr > 0
+      ? -1 * boundBr * (Math.abs(vel) / vel) //
       : 0
-  })(add(bee.pos)(scale(5)(bee.vel)))(ctx.bounds)
+  })(bee.vel)(boundBreak)
 
   const steering = sub(target)(bee.vel)
   return steering

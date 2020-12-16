@@ -3,6 +3,7 @@ import { newBee } from '../bee'
 import {
   add,
   average,
+  clampMagnitude,
   heading2d,
   invert,
   magnitude,
@@ -70,33 +71,28 @@ const applyVelocities = (ctx: Context) => (bee: Bee): void => {
 const applyForces = (ctx: Context) => (bee: Bee): void => {
   const neighbors = getNeighbors(ctx, bee)
 
-  const cohesive = calcCohesiveForce(ctx, bee, neighbors)
-  const alignment = calcAlignmentForce(ctx, bee, neighbors)
-  const separation = calcSeparationForce(ctx, bee, neighbors)
+  const ff = []
 
   const bounding = calcBoundingForce(ctx, bee)
 
-  const forces = sum([cohesive, alignment, separation, bounding])
+  ff.push(bounding)
+
+  if (neighbors.length > 0) {
+    const cohesive = calcCohesiveForce(ctx, bee, neighbors)
+    const alignment = calcAlignmentForce(ctx, bee, neighbors)
+    const separation = calcSeparationForce(ctx, bee, neighbors)
+
+    ff.push(cohesive)
+    ff.push(alignment)
+    ff.push(separation)
+  }
+
+  const forces = sum(ff)
   const normal = scale(0.2)(forces)
 
   const newVelocity = add(bee.vel)(normal)
 
-  const mag = magnitude(newVelocity)
-
-  const limited =
-    mag > ctx.params.speedMultiplier.cache
-      ? pipe(normalize, scale(ctx.params.speedMultiplier.cache))(newVelocity)
-      : newVelocity
-
-  if (!newVelocity.x || !newVelocity.y || !newVelocity.z) {
-    console.log('numBees', ctx.bees.length)
-    console.log('neighbors', neighbors)
-    console.log('cohesive', cohesive)
-    console.log('alignment', alignment)
-    console.log('separation', separation)
-    console.log('forces', forces)
-    throw new Error('not a valid velocity')
-  }
+  const limited = clampMagnitude(2)(ctx.params.maxSpeed.cache)(newVelocity)
 
   bee.vel.set(limited)
 }

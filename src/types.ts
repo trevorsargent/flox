@@ -9,7 +9,7 @@ export interface Context {
     targetPopulation: Param
     viewDistance: Param
     viewAngle: Param
-    speedMultiplier: Param
+    maxSpeed: Param
     cohesiveForce: Param
     separationForce: Param
     alignmentForce: Param
