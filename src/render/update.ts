@@ -17,6 +17,7 @@ import {
 import { pipe } from 'ramda'
 import {
   calcAlignmentForce,
+  calcBoundingForce,
   calcCohesiveForce,
   calcSeparationForce
 } from '../flock/forces'
@@ -25,7 +26,7 @@ import { getNeighbors, updateZoneCache } from '../flock/neighbors'
 export const update = (ctx: Context): void => {
   cacheSliderValues(ctx),
     updateFlockPopulation(ctx),
-    updateZoneCache(ctx),
+    // updateZoneCache(ctx),
     updateFlockVelocities(ctx),
     updateFlockPositions(ctx)
 }
@@ -43,41 +44,25 @@ const updateFlockPopulation = (ctx: Context): void => {
 }
 
 const applyVelocities = (ctx: Context) => (bee: Bee): void => {
-  const vv = pipe(normalize, scale(ctx.params.speedMultiplier.cache))(bee.vel)
+  const vv = bee.vel
 
-  const newPos = newV3(
-    bee.pos.x + ctx.canvas.dims.x + vv.x,
-    bee.pos.y + ctx.canvas.dims.y + vv.y,
-    0
-  )
+  const newPos = newV3(bee.pos.x + vv.x, bee.pos.y + vv.y, bee.pos.z + vv.z)
 
-  if (newPos.x > ctx.canvas.dims.x / 2) {
-    newPos.x = newPos.x - ctx.canvas.dims.x - 1
-  }
+  // if (newPos.x > ctx.canvas.dims.x / 2) {
+  //   newPos.x = newPos.x - ctx.canvas.dims.x - 1
+  // }
 
-  if (newPos.x < (-1 * ctx.canvas.dims.x) / 2) {
-    newPos.x = newPos.x + ctx.canvas.dims.x + 1
-  }
+  // if (newPos.x < (-1 * ctx.canvas.dims.x) / 2) {
+  //   newPos.x = newPos.x + ctx.canvas.dims.x + 1
+  // }
 
-  if (newPos.y > ctx.canvas.dims.y / 2) {
-    newPos.y = newPos.y - ctx.canvas.dims.y
-  }
+  // if (newPos.y > ctx.canvas.dims.y / 2) {
+  //   newPos.y = newPos.y - ctx.canvas.dims.y
+  // }
 
-  if (newPos.y < (-1 * ctx.canvas.dims.y) / 2) {
-    newPos.y = newPos.y + ctx.canvas.dims.y
-  }
-
-  if (newPos.z > ctx.canvas.dims.x / 2) {
-    newPos.z = newPos.z - ctx.canvas.dims.x
-  }
-
-  if (newPos.z < (-1 * ctx.canvas.dims.x) / 2) {
-    newPos.z = newPos.z + ctx.canvas.dims.x
-  }
-
-  if (!newPos.x || !newPos.y) {
-    throw new Error('not a valid position')
-  }
+  // if (newPos.y < (-1 * ctx.canvas.dims.y) / 2) {
+  //   newPos.y = newPos.y + ctx.canvas.dims.y
+  // }
 
   bee.pos.set(newPos)
 }
@@ -89,12 +74,21 @@ const applyForces = (ctx: Context) => (bee: Bee): void => {
   const alignment = calcAlignmentForce(ctx, bee, neighbors)
   const separation = calcSeparationForce(ctx, bee, neighbors)
 
-  const forces = sum([cohesive, alignment, separation])
-  const normal = pipe(normalize, scale(0.2))(forces)
+  const bounding = calcBoundingForce(ctx, bee)
 
-  const newVelocity = pipe(add(bee.vel), normalize)(normal)
+  const forces = sum([cohesive, alignment, separation, bounding])
+  const normal = scale(0.2)(forces)
 
-  if (!newVelocity.x || !newVelocity.y) {
+  const newVelocity = add(bee.vel)(normal)
+
+  const mag = magnitude(newVelocity)
+
+  const limited =
+    mag > ctx.params.speedMultiplier.cache
+      ? pipe(normalize, scale(ctx.params.speedMultiplier.cache))(newVelocity)
+      : newVelocity
+
+  if (!newVelocity.x || !newVelocity.y || !newVelocity.z) {
     console.log('numBees', ctx.bees.length)
     console.log('neighbors', neighbors)
     console.log('cohesive', cohesive)
@@ -104,7 +98,7 @@ const applyForces = (ctx: Context) => (bee: Bee): void => {
     throw new Error('not a valid velocity')
   }
 
-  bee.vel.set(newVelocity)
+  bee.vel.set(limited)
 }
 
 const ensurePopulation = (ctx: Context): void => {

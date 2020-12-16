@@ -10,16 +10,16 @@ export interface I3 {
   z: number
 }
 
-export class  V3 implements I3 {
+export class V3 implements I3 {
   x: number
   y: number
   z: number
 
-  constructor(init: I3){
+  constructor(init: I3) {
     this.set(init)
   }
 
-  set({x, y, z}: I3): void{
+  set({ x, y, z }: I3): void {
     this.x = x
     this.y = y
     this.z = z
@@ -38,7 +38,7 @@ export const applyToComponents = (apply: (c: number) => number) => (
   z: apply(a.z)
 })
 
-export const mixComponents = (mix: (aa: number) => (bb: number) => number) => (
+export const mixComponents = (mix: (ac: number) => (bc: number) => number) => (
   a: I3
 ) => (b: I3) => ({
   x: mix(a.x)(b.x),
@@ -57,7 +57,7 @@ export const invert = applyToComponents((c) => -1 * c)
 export const normalize = (a: I3): I3 => {
   const mag = magnitude(a)
   const safeMag = mag > 0 ? mag : 1
-  
+
   return applyToComponents((c) => c / safeMag)(a)
 }
 
@@ -98,5 +98,7 @@ export const magSquared = pipe(
 )
 
 export const magnitude = pipe(magSquared, Math.sqrt)
+
+export const dot = pipe(mixComponents((ac) => (bc) => ac * bc))
 
 export const heading2d = (a: I3) => Math.atan2(a.y, a.x)

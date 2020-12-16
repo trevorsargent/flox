@@ -15,18 +15,22 @@ export const getNeighbors = (ctx: Context, bee: Bee): Bee[] => {
 
   const neighbors = new Set<Bee>()
 
-  for (let x = chunk.x - 1; x <= chunk.x + 1; x++) {
-    for (let y = chunk.y - 1; y <= chunk.y + 1; y++) {
-      for (let z = chunk.z - 1; z <= chunk.y + 1; z++) {
-        for (const b of ctx.zones.get(x).get(y).get(z).values()) {
-          neighbors.add(b)
-        }
-      }
-    }
-  }
+  // for (let x = chunk.x - 1; x <= chunk.x + 1; x++) {
+  //   for (let y = chunk.y - 1; y <= chunk.y + 1; y++) {
+  //     for (let z = chunk.z - 1; z <= chunk.y + 1; z++) {
+  //       for (const b of ctx.zones
+  //         .originalGet(x)
+  //         ?.originalGet(y)
+  //         ?.originalGet(z)
+  //         ?.values() ?? []) {
+  //         neighbors.add(b)
+  //       }
+  //     }
+  //   }
+  // }
   // console.log("get Neighbors", ctx.zones)
 
-  // return ctx.bees.filter(isNeighborBee(ctx, bee))
+  return ctx.bees.filter(isNeighborBee(ctx, bee))
 
   return Array.from(neighbors).filter(isNeighborBee(ctx, bee))
 }
@@ -38,7 +42,7 @@ const isNeighborBee = (ctx: Context, thisBee: Bee) => (thatBee: Bee) => {
 
   const delta = sub(thatBee.pos)(thisBee.pos)
 
-  if (magnitude(delta) > ctx.params.viewDistance.ref.value()) {
+  if (magnitude(delta) > ctx.params.viewDistance.cache) {
     return false
   }
 

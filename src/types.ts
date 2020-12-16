@@ -4,6 +4,7 @@ import { I3, V3 } from './lib/v3'
 export interface Context {
   bees: Bee[]
   canvas: Canvas
+  bounds: I3
   params: {
     targetPopulation: Param
     viewDistance: Param
@@ -46,6 +47,10 @@ export class SmartMap<T, U> {
 
   constructor(private newFunc: () => U) {
     this.map = new Map<T, U>()
+  }
+
+  originalGet(key: T): U | undefined {
+    return this.map.get(key)
   }
 
   get(key: T) {

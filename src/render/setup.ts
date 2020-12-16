@@ -8,7 +8,7 @@ export const setup = (ctx: Context, p: p5): void => {
   const HEIGHT = WIDTH / 1.618
 
   const canvas: Canvas = {
-    center: newV3(0,0, 0),
+    center: newV3(0, 0, 0),
     dims: newV3(WIDTH, HEIGHT, 0)
   }
 
@@ -58,17 +58,21 @@ export const setup = (ctx: Context, p: p5): void => {
       showViewArea: false,
       showVelocityVectors: false
     },
+    bounds: {
+      x: 400,
+      y: 300,
+      z: 400
+    },
     zones: undefined
   }
 
   Object.entries(initialContext.params).forEach(([_, param], idx, sliders) => {
-    const y = initialContext.canvas.dims.y - 10;
-    const x = idx / sliders.length * initialContext.canvas.dims.x 
+    const y = initialContext.canvas.dims.y - 10
+    const x = (idx / sliders.length) * initialContext.canvas.dims.x
 
     param.ref.position(x, y)
   })
 
   Object.assign(ctx, initialContext)
   ctx.bees.push(newBee(initialContext))
-
 }
