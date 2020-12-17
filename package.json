@@ -1,6 +1,6 @@
 {
   "name": "@trevorsargent/flox",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "index.ts",
   "dependencies": {
     "@types/p5": "^0.9.1",
