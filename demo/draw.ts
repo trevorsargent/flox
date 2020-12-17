@@ -1,6 +1,6 @@
 import p5 from 'p5'
-import { Bee } from '../flock/types/bee'
-import { Context } from '../flock/types/flock'
+import { Bee } from '../src/flock/types/bee'
+import { Context } from '../src/flock/types/flock'
 
 // const WIDTH = 700
 export const draw = (p: p5, ctx: Context): void => {
