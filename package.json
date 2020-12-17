@@ -1,6 +1,5 @@
 {
   "name": "flox",
-  "scope": "trevorsargent",
   "version": "0.1.0",
   "dependencies": {
     "@types/p5": "^0.9.1",
