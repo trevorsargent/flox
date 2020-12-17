@@ -1,5 +1,5 @@
 import p5, { Element } from 'p5'
-import Flock, { ParamSet } from '../src'
+import Flock, { ParamSet } from '..'
 import { draw } from './draw'
 
 interface ParamSliderInfo {

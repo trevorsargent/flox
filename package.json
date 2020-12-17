@@ -1,5 +1,5 @@
 {
-  "name": "flox",
+  "name": "@trevorsargent/flox",
   "version": "0.1.0",
   "dependencies": {
     "@types/p5": "^0.9.1",
