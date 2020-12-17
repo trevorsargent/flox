@@ -14,16 +14,17 @@ export const init = (): Context => {
       // force coeficients
       alignmentForce: null,
       cohesiveForce: null,
-      separationForce: null
+      separationForce: null,
+      // bounds
+      bounds: {
+        x: null,
+        y: null,
+        z: null
+      }
     },
     debugOptions: {
       showViewArea: false,
       showVelocityVectors: false
-    },
-    bounds: {
-      x: 400,
-      y: 300,
-      z: 400
     },
     zones: undefined
   }

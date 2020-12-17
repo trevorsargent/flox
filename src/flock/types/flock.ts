@@ -1,5 +1,5 @@
 import { SmartMap } from '../../lib/smartMap'
-import { I3 } from '../../lib/v3'
+import { C3 } from '../../lib/v3'
 import { Bee } from './bee'
 import { init } from '../sim/init'
 import { tick } from '../sim/tick'
@@ -32,12 +32,12 @@ export type ParamSet<T> = {
   cohesiveForce: T
   separationForce: T
   alignmentForce: T
+  bounds: C3<T>
 }
 
 export interface Context {
   bees: Bee[]
   // canvas: Canvas
-  bounds: I3
   params: ParamSet<number>
   debugOptions: {
     showViewArea: boolean

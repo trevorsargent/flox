@@ -4,11 +4,13 @@ import { compose, pipe } from 'ramda'
 //
 // Types
 
-export interface I3 {
-  x: number
-  y: number
-  z: number
+export interface C3<T> {
+  x: T
+  y: T
+  z: T
 }
+
+export type I3 = C3<number>
 
 export class V3 implements I3 {
   x: number
@@ -37,6 +39,16 @@ export const applyToComponents = (apply: (c: number) => number) => (
   y: apply(a.y),
   z: apply(a.z)
 })
+
+export const forAllComponenets = (
+  forAll: (getComponent: (input: I3) => number) => number
+): I3 => {
+  return {
+    x: forAll((a) => a.x),
+    y: forAll((a) => a.y),
+    z: forAll((a) => a.z)
+  }
+}
 
 export const mixComponents = (mix: (ac: number) => (bc: number) => number) => (
   a: I3

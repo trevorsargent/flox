@@ -10,7 +10,7 @@ interface ParamSliderInfo {
 function sketch(p: p5) {
   const flock = new Flock()
 
-  let params: ParamSet<ParamSliderInfo>
+  let params: { [index: string]: ParamSliderInfo }
 
   p.setup = () => {
     p.createCanvas(1100, 650, p.WEBGL)
@@ -43,12 +43,24 @@ function sketch(p: p5) {
       separationForce: {
         ref: p.createSlider(0, 30, 15, 0),
         name: 'Separation Force'
+      },
+      boundX: {
+        ref: p.createSlider(0, 400, 200, 1),
+        name: 'BoundsX'
+      },
+      boundY: {
+        ref: p.createSlider(0, 400, 200, 1),
+        name: 'BoundsY'
+      },
+      boundZ: {
+        ref: p.createSlider(0, 400, 200, 1),
+        name: 'BoundsZ'
       }
     }
 
     Object.entries(params).forEach(([_, param], idx, sliders) => {
       const y = 10
-      const x = (idx / sliders.length) * 1000
+      const x = (idx / sliders.length) * window.innerWidth
       param.ref.position(x, y)
     })
 
@@ -62,9 +74,9 @@ function sketch(p: p5) {
     draw(p, flock.context)
   }
 
-  const getUpdateParams = (
-    params: ParamSet<ParamSliderInfo>
-  ): ParamSet<number> => {
+  const getUpdateParams = (params: {
+    [index: string]: ParamSliderInfo
+  }): ParamSet<number> => {
     return {
       alignmentForce: params.alignmentForce.ref.value() as number,
       cohesiveForce: params.cohesiveForce.ref.value() as number,
@@ -72,7 +84,12 @@ function sketch(p: p5) {
       viewAngle: params.viewAngle.ref.value() as number,
       separationForce: params.separationForce.ref.value() as number,
       maxSpeed: params.maxSpeed.ref.value() as number,
-      targetPopulation: params.targetPopulation.ref.value() as number
+      targetPopulation: params.targetPopulation.ref.value() as number,
+      bounds: {
+        x: params.boundX.ref.value() as number,
+        y: params.boundY.ref.value() as number,
+        z: params.boundZ.ref.value() as number
+      }
     }
   }
 }

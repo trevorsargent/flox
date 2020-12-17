@@ -1,12 +1,10 @@
 import { pipe } from 'ramda'
 import {
-  add,
-  applyToComponents,
   average,
+  forAllComponenets,
   I3,
   invert,
   magSquared,
-  mixComponents,
   newV3,
   normalize,
   scale,
@@ -17,17 +15,18 @@ import { Bee } from '../types/bee'
 import { Context } from '../types/flock'
 
 export const calcBoundingForce = (ctx: Context, bee: Bee): I3 => {
-  const futurePos = add(bee.pos)(scale(8)(bee.vel))
+  const target = forAllComponenets((g) => {
+    const pos = g(bee.pos)
+    const vel = g(bee.vel)
+    const fpos = pos + 3 * vel
+    const bound = g(ctx.params.bounds)
+    const sign = -1 * (Math.abs(pos) / pos)
 
-  const boundBreak = sub(applyToComponents((c) => Math.abs(c))(futurePos))(
-    ctx.bounds
-  )
-
-  const target = mixComponents((vel) => (boundBr) => {
-    return boundBr > 0
-      ? -1 * boundBr * (Math.abs(vel) / vel) //
-      : 0
-  })(bee.vel)(boundBreak)
+    if (!(Math.abs(fpos) > bound)) {
+      return 0
+    }
+    return sign * Math.pow(Math.abs(fpos - bound), 2)
+  })
 
   const steering = sub(target)(bee.vel)
   return steering
