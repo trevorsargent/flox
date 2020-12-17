@@ -8,5 +8,6 @@
     "lib": ["ESNext", "ESNext.AsyncIterable", "dom"],
     "rootDir": "./src",
     "moduleResolution": "node"
-  }
+  },
+  "exclude": ["./dist", "./.cache"]
 }

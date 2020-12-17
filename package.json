@@ -9,14 +9,16 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@types/ramda": "^0.27.32",
+    "@types/ramda": "^0.27.34",
     "@types/uuid": "^8.3.0",
+    "cssnano": "^4.1.10",
     "sass": "^1.30.0",
     "typescript": "^3.9.7"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "demo": "npx parcel src/demo/index.html"
+    "demo": "npx parcel demo/index.html",
+    "build": "npx parcel build demo/index.html"
   },
   "keywords": [],
   "author": "",
