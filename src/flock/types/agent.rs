@@ -1,4 +1,4 @@
-mod agent_test;
+mod agent_spec;
 use vex::Vex;
 
 #[derive(Debug)]
@@ -15,20 +15,25 @@ pub trait Movement {
 pub trait Force {
     fn apply_force(&mut self, force: Vex);
 }
+pub struct AgentParams {
+    pub pos: Option<Vex>, 
+    pub vel: Option<Vex>,
+    pub acc: Option<Vex>
+}
 
 impl Agent {
     #[allow(dead_code)]
-    pub fn new(pos: Option<Vex>, vel: Option<Vex>, acc: Option<Vex>) -> Agent {
+    pub fn new(params: AgentParams) -> Agent {
         Self {
-            pos: match pos {
+            pos: match params.pos {
                 Some(p) => p,
                 None => Vex::new(),
             },
-            vel: match vel {
+            vel: match params.vel {
                 Some(v) => v,
                 None => Vex::new(),
             },
-            acc: match acc {
+            acc: match params.acc {
                 Some(a) => a,
                 None => Vex::new(),
             },

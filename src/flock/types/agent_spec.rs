@@ -1,20 +1,23 @@
 #[cfg(test)]
-mod tests {
+    
     use crate::agent::*;
+
     #[test]
     fn it_can_make_a_new_agent() {
-        let agent = Agent::new(
-            Some(Vex {
+        let agent = Agent::new(AgentParams {
+
+           pos:  Some(Vex {
                 x: 0_f64,
                 y: 0_f64,
                 z: 0_f64,
             }),
-            Some(Vex {
+            vel: Some(Vex {
                 x: 0_f64,
                 y: 1_f64,
                 z: 2_f64,
             }),
-            None,
+            acc: None,
+        }
         );
 
         assert_eq!(agent.pos.z, 0_f64);
@@ -23,17 +26,19 @@ mod tests {
 
     #[test]
     fn it_moves(){
-        let mut agent = Agent::new(
-            Some(Vex {
+        let mut agent = Agent::new(AgentParams {
+            pos: Some(Vex {
                 x: 1.5, 
                 y: 2.5, 
                 z: 3.5, 
             }), 
-            Some(Vex {
+            vel: Some(Vex {
                 x: 0.5, 
                 y: 0.5, 
                 z: 0.5
-            }), None
+            }), 
+            acc: None
+        }
         );
 
         agent.advance();
@@ -47,22 +52,23 @@ mod tests {
 
     #[test]
     fn it_accelerates(){
-        let mut agent = Agent::new(
-            Some(Vex {
+        let mut agent = Agent::new(AgentParams {
+            pos: Some( Vex {
                 x: 1.0, 
                 y: 1.0, 
                 z: 1.0
             }), 
-            Some(Vex {
+            vel: Some(Vex {
                 x: 1.0, 
                 y: 0.0, 
                 z: 0.0,
             }), 
-            Some(Vex {
+            acc: Some(Vex {
                 x: 0.5, 
                 y: 0.0, 
                 z: 0.0, 
             })
+        }
         );
 
         agent.advance();
@@ -80,4 +86,3 @@ mod tests {
          assert_eq!(agent.vel.x, 2.5);
          assert_eq!(agent.pos.x, 7.0);
     }
-}
