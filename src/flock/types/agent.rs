@@ -9,11 +9,11 @@ pub struct Agent {
 }
 
 pub trait Movement {
-    fn advance(self);
+    fn advance(&mut self);
 }
 
 pub trait Force {
-    fn apply_force(self, force: Vex);
+    fn apply_force(&mut self, force: Vex);
 }
 
 impl Agent {
@@ -37,7 +37,14 @@ impl Agent {
 }
 
 impl Movement for Agent {
-    fn advance(mut self) {
+    fn advance(&mut self) {
+        self.vel.assign(self.vel + self.acc);
         self.pos.assign(self.pos + self.vel);
+    }
+}
+
+impl Force for Agent {
+    fn apply_force(&mut self, force: Vex){
+        self.vel.assign(self.vel + force)
     }
 }
