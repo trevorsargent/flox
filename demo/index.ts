@@ -17,31 +17,31 @@ function sketch(p: p5) {
 
     params = {
       targetPopulation: {
-        ref: p.createSlider(0, 250, 150, 1),
+        ref: p.createSlider(10, 250, 80, 1),
         name: 'Target Population'
       },
       viewDistance: {
-        ref: p.createSlider(0, 600, 200, 1),
+        ref: p.createSlider(0, 200, 100, 1),
         name: 'View Distance'
       },
       viewAngle: {
-        ref: p.createSlider(0, p.PI * 2, p.PI, 0),
+        ref: p.createSlider(0, p.PI * 2, p.PI / 2, 0),
         name: 'View Angle'
       },
       maxSpeed: {
-        ref: p.createSlider(0, 10, 5, 0),
+        ref: p.createSlider(5, 20, 10, 0),
         name: 'Speed'
       },
       cohesiveForce: {
-        ref: p.createSlider(0, 30, 5, 0),
+        ref: p.createSlider(0, 1, .2, 0),
         name: 'Cohesive Force'
       },
       alignmentForce: {
-        ref: p.createSlider(0, 30, 10, 0),
+        ref: p.createSlider(0, 1, .8, 0),
         name: 'Alignment Force'
       },
       separationForce: {
-        ref: p.createSlider(0, 30, 15, 0),
+        ref: p.createSlider(0, 1, .3, 0),
         name: 'Separation Force'
       },
       boundX: {

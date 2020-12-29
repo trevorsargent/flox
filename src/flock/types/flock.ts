@@ -1,6 +1,6 @@
 import { SmartMap } from '../../lib/smartMap'
 import { C3 } from '../../lib/v3'
-import { Bee } from './bee'
+import { Agent } from './agent'
 import { init } from '../sim/init'
 import { tick } from '../sim/tick'
 
@@ -36,7 +36,7 @@ export type ParamSet<T> = {
 }
 
 export interface Context {
-  bees: Bee[]
+  bees: Agent[]
   // canvas: Canvas
   params: ParamSet<number>
   debugOptions: {
@@ -48,5 +48,5 @@ export interface Context {
 
 export type ZoneCache = SmartMap<
   number,
-  SmartMap<number, SmartMap<number, Set<Bee>>>
+  SmartMap<number, SmartMap<number, Set<Agent>>>
 >

@@ -6,13 +6,13 @@ import {
   magnitude,
   sub
 } from '../../lib/v3'
-import { Bee } from '../types/bee'
+import { Agent } from '../types/agent'
 import { Context } from '../types/flock'
 
-export const getNeighbors = (ctx: Context, bee: Bee): Bee[] => {
+export const getNeighbors = (ctx: Context, bee: Agent): Agent[] => {
   const chunk = getBeeChunk(ctx, bee)
 
-  const neighbors = new Set<Bee>()
+  const neighbors = new Set<Agent>()
 
   // for (let x = chunk.x - 1; x <= chunk.x + 1; x++) {
   //   for (let y = chunk.y - 1; y <= chunk.y + 1; y++) {
@@ -33,7 +33,7 @@ export const getNeighbors = (ctx: Context, bee: Bee): Bee[] => {
   // return Array.from(neighbors).filter(isNeighborBee(ctx, bee))
 }
 
-const isNeighborBee = (ctx: Context, thisBee: Bee) => (thatBee: Bee) => {
+const isNeighborBee = (ctx: Context, thisBee: Agent) => (thatBee: Agent) => {
   if (thisBee.id === thatBee.id) {
     return false
   }
@@ -59,7 +59,7 @@ export const updateZoneCache = (ctx: Context): void => {
       new SmartMap( // y
         () =>
           new SmartMap( // z
-            () => new Set<Bee>() // there they are!
+            () => new Set<Agent>() // there they are!
           )
       )
   )
@@ -70,7 +70,7 @@ export const updateZoneCache = (ctx: Context): void => {
   })
 }
 
-function getBeeChunk(ctx: Context, bee: Bee): I3 {
+function getBeeChunk(ctx: Context, bee: Agent): I3 {
   const resolution = ctx.params.viewDistance
 
   const chunk: I3 = applyToComponents((c) => Math.floor(c / resolution))(

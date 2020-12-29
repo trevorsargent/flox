@@ -1,5 +1,5 @@
 import p5 from 'p5'
-import { Bee } from '../src/flock/types/bee'
+import { Agent } from '../src/flock/types/agent'
 import { Context } from '../src/flock/types/flock'
 
 // const WIDTH = 700
@@ -48,7 +48,7 @@ export const draw = (p: p5, ctx: Context): void => {
   ctx.bees.forEach((bee) => drawBee(p, ctx, bee))
 }
 
-const drawBee = (p: p5, ctx: Context, bee: Bee): void => {
+const drawBee = (p: p5, ctx: Context, bee: Agent): void => {
   const beeSize = 3
   const beeShade = 5
 

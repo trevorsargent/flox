@@ -18,7 +18,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "demo": "npx parcel demo/index.html",
-    "build": "npx parcel build demo/index.html"
+    "build": "npx parcel build demo/index.html",
+    "dev": "npm run demo"
   },
   "keywords": [],
   "author": "",

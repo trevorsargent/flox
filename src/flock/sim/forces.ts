@@ -11,10 +11,10 @@ import {
   sub,
   sum
 } from '../../lib/v3'
-import { Bee } from '../types/bee'
+import { Agent } from '../types/agent'
 import { Context } from '../types/flock'
 
-export const calcBoundingForce = (ctx: Context, bee: Bee): I3 => {
+export const calcBoundingForce = (ctx: Context, bee: Agent): I3 => {
   const target = forAllComponenets((g) => {
     const pos = g(bee.pos)
     const vel = g(bee.vel)
@@ -34,8 +34,8 @@ export const calcBoundingForce = (ctx: Context, bee: Bee): I3 => {
 
 export const calcSeparationForce = (
   ctx: Context,
-  bee: Bee,
-  neighbors: Bee[]
+  bee: Agent,
+  neighbors: Agent[]
 ): I3 => {
   if (neighbors.length === 0) {
     return newV3(0, 0, 0)
@@ -60,7 +60,7 @@ export const calcSeparationForce = (
   return separationForce
 }
 
-export const calcCohesiveForce = (ctx: Context, bee: Bee, neighbors: Bee[]) => {
+export const calcCohesiveForce = (ctx: Context, bee: Agent, neighbors: Agent[]) => {
   if (neighbors.length === 0) {
     return newV3(0, 0, 0)
   }
@@ -80,8 +80,8 @@ export const calcCohesiveForce = (ctx: Context, bee: Bee, neighbors: Bee[]) => {
 
 export const calcAlignmentForce = (
   ctx: Context,
-  bee: Bee,
-  neighbors: Bee[]
+  bee: Agent,
+  neighbors: Agent[]
 ): I3 => {
   if (neighbors.length === 0) {
     return newV3(0, 0, 0)

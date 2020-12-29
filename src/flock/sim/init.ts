@@ -1,9 +1,9 @@
-import { Bee } from '../types/bee'
+import { Agent } from '../types/agent'
 import { Context } from '../types/flock'
 
 export const init = (): Context => {
   return {
-    bees: [new Bee()],
+    bees: [new Agent()],
     params: {
       // bees
       targetPopulation: null,

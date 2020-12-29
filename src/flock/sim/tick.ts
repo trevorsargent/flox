@@ -1,5 +1,5 @@
 import { add, clampMagnitude, newV3, scale, sum } from '../../lib/v3'
-import { Bee } from '../types/bee'
+import { Agent } from '../types/agent'
 import { Context } from '../types/flock'
 import {
   calcAlignmentForce,
@@ -28,48 +28,41 @@ const updateFlockPopulation = (ctx: Context): void => {
   ensurePopulation(ctx)
 }
 
-const applyVelocities = (ctx: Context) => (bee: Bee): void => {
-  const vv = bee.vel
+const applyVelocities = (ctx: Context) => (bee: Agent): void => {
+  bee.setMaxSpeed(ctx.params.maxSpeed)
+  bee.setMinSpeed(5)
 
-  const newPos = newV3(bee.pos.x + vv.x, bee.pos.y + vv.y, bee.pos.z + vv.z)
+  bee.tick()
+  // const vv = bee.vel
 
-  bee.pos.set(newPos)
+  // const newPos = newV3(bee.pos.x + vv.x, bee.pos.y + vv.y, bee.pos.z + vv.z)
+
+  // bee.pos.set(newPos)
 }
 
-const applyForces = (ctx: Context) => (bee: Bee): void => {
+const applyForces = (ctx: Context) => (bee: Agent): void => {
   const neighbors = getNeighbors(ctx, bee)
 
-  const ff = []
-
   const bounding = calcBoundingForce(ctx, bee)
-
-  ff.push(bounding)
+  
+  bee.applyForce(bounding)
 
   if (neighbors.length > 0) {
     const cohesive = calcCohesiveForce(ctx, bee, neighbors)
     const alignment = calcAlignmentForce(ctx, bee, neighbors)
     const separation = calcSeparationForce(ctx, bee, neighbors)
 
-    ff.push(cohesive)
-    ff.push(alignment)
-    ff.push(separation)
+    bee.applyForce(cohesive)
+    bee.applyForce(alignment)
+    bee.applyForce(separation)
   }
-
-  const forces = sum(ff)
-  const normal = scale(0.2)(forces)
-
-  const newVelocity = add(bee.vel)(normal)
-
-  const limited = clampMagnitude(2)(ctx.params.maxSpeed)(newVelocity)
-
-  bee.vel.set(limited)
 }
 
 const ensurePopulation = (ctx: Context): void => {
   const target = ctx.params.targetPopulation
 
   if (ctx.bees.length < target) {
-    ctx.bees.push(new Bee())
+    ctx.bees.push(new Agent())
   }
 
   if (ctx.bees.length > target) {
