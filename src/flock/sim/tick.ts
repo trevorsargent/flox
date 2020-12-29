@@ -1,4 +1,4 @@
-import { add, clampMagnitude, newV3, scale, sum } from '../../lib/v3'
+import { add, clampMagnitude, magnitude, newV3, scale, sum } from '../../lib/v3'
 import { Agent } from '../types/agent'
 import { Context } from '../types/flock'
 import {
@@ -29,9 +29,9 @@ const updateFlockPopulation = (ctx: Context): void => {
 }
 
 const applyVelocities = (ctx: Context) => (bee: Agent): void => {
+  bee.setMinSpeed(ctx.params.minSpeed)
   bee.setMaxSpeed(ctx.params.maxSpeed)
-  bee.setMinSpeed(5)
-
+  bee.setMaxForce(ctx.params.maxForce)
   bee.tick()
   // const vv = bee.vel
 
@@ -48,6 +48,7 @@ const applyForces = (ctx: Context) => (bee: Agent): void => {
   bee.applyForce(bounding)
 
   if (neighbors.length > 0) {
+
     const cohesive = calcCohesiveForce(ctx, bee, neighbors)
     const alignment = calcAlignmentForce(ctx, bee, neighbors)
     const separation = calcSeparationForce(ctx, bee, neighbors)

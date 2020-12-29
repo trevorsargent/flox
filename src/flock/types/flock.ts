@@ -29,6 +29,8 @@ export type ParamSet<T> = {
   viewDistance: T
   viewAngle: T
   maxSpeed: T
+  minSpeed: T, 
+  maxForce: T,
   cohesiveForce: T
   separationForce: T
   alignmentForce: T

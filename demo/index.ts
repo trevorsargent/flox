@@ -28,20 +28,28 @@ function sketch(p: p5) {
         ref: p.createSlider(0, p.PI * 2, p.PI / 2, 0),
         name: 'View Angle'
       },
+      minSpeed: {
+        ref: p.createSlider(0, 10, 2, 0),
+        name: 'Min Speed'
+      },
       maxSpeed: {
         ref: p.createSlider(5, 20, 10, 0),
-        name: 'Speed'
+        name: 'Max Speed'
+      },
+      maxForce:{
+        ref: p.createSlider(2, 20, 2, 0), 
+        name: 'Max Force'
       },
       cohesiveForce: {
-        ref: p.createSlider(0, 1, .2, 0),
+        ref: p.createSlider(0, 1, .25, 0),
         name: 'Cohesive Force'
       },
       alignmentForce: {
-        ref: p.createSlider(0, 1, .8, 0),
+        ref: p.createSlider(0, 1, .25, 0),
         name: 'Alignment Force'
       },
       separationForce: {
-        ref: p.createSlider(0, 1, .3, 0),
+        ref: p.createSlider(0, 1, .25, 0),
         name: 'Separation Force'
       },
       boundX: {
@@ -62,6 +70,7 @@ function sketch(p: p5) {
       const y = 10
       const x = (idx / sliders.length) * window.innerWidth
       param.ref.position(x, y)
+      param.ref.size(100)
     })
 
     // setInterval(() => {
@@ -85,6 +94,8 @@ function sketch(p: p5) {
       separationForce: params.separationForce.ref.value() as number,
       maxSpeed: params.maxSpeed.ref.value() as number,
       targetPopulation: params.targetPopulation.ref.value() as number,
+      maxForce: params.maxForce.ref.value() as number, 
+      minSpeed: params.minSpeed.ref.value() as number, 
       bounds: {
         x: params.boundX.ref.value() as number,
         y: params.boundY.ref.value() as number,
