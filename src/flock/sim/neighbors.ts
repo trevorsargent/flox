@@ -9,8 +9,8 @@ import {
 import { Agent } from '../types/agent'
 import { Context } from '../types/flock'
 
-export const getNeighbors = (ctx: Context, bee: Agent): Agent[] => {
-  const chunk = getBeeChunk(ctx, bee)
+export const getNeighbors = (ctx: Context, agent: Agent): Agent[] => {
+  const chunk = getAgentChunk(ctx, agent)
 
   const neighbors = new Set<Agent>()
 
@@ -28,23 +28,23 @@ export const getNeighbors = (ctx: Context, bee: Agent): Agent[] => {
   //   }
   // }
 
-  return ctx.bees.filter(isNeighborBee(ctx, bee))
+  return ctx.agents.filter(isNeighbor(ctx, agent))
 
-  // return Array.from(neighbors).filter(isNeighborBee(ctx, bee))
+  // return Array.from(neighbors).filter(isNeighbor(ctx, agent))
 }
 
-const isNeighborBee = (ctx: Context, thisBee: Agent) => (thatBee: Agent) => {
-  if (thisBee.id === thatBee.id) {
+const isNeighbor = (ctx: Context, thisAgent: Agent) => (thatAgent: Agent) => {
+  if (thisAgent.id === thatAgent.id) {
     return false
   }
 
-  const delta = sub(thatBee.pos)(thisBee.pos)
+  const delta = sub(thatAgent.pos)(thisAgent.pos)
 
   if (magnitude(delta) > ctx.params.viewDistance) {
     return false
   }
 
-  if (angleBetween(delta)(thisBee.vel) > ctx.params.viewAngle / 2) {
+  if (angleBetween(delta)(thisAgent.vel) > ctx.params.viewAngle / 2) {
     return false
   }
 
@@ -64,17 +64,17 @@ export const updateZoneCache = (ctx: Context): void => {
       )
   )
 
-  ctx.bees.forEach((bee) => {
-    const chunk = getBeeChunk(ctx, bee)
-    ctx.zones.get(chunk.x).get(chunk.y).get(chunk.z).add(bee)
+  ctx.agents.forEach((agent) => {
+    const chunk = getAgentChunk(ctx, agent)
+    ctx.zones.get(chunk.x).get(chunk.y).get(chunk.z).add(agent)
   })
 }
 
-function getBeeChunk(ctx: Context, bee: Agent): I3 {
+function getAgentChunk(ctx: Context, agent: Agent): I3 {
   const resolution = ctx.params.viewDistance
 
   const chunk: I3 = applyToComponents((c) => Math.floor(c / resolution))(
-    bee.pos
+    agent.pos
   )
 
   return chunk

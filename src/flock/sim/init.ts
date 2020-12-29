@@ -1,13 +1,15 @@
 import { Agent } from '../types/agent'
-import { Context } from '../types/flock'
+import { Context, ParamSet } from '../types/flock'
 
 export const init = (): Context => {
   return {
-    bees: [new Agent()],
-    params: {
-      // bees
+    agents: [new Agent()],
+    params: <ParamSet<null>>{
+      // agents
       targetPopulation: null,
       maxSpeed: null,
+      minSpeed: null,
+      maxForce: null,
       // neighbors
       viewAngle: null,
       viewDistance: null,
@@ -16,11 +18,9 @@ export const init = (): Context => {
       cohesiveForce: null,
       separationForce: null,
       // bounds
-      bounds: {
-        x: null,
-        y: null,
-        z: null
-      }
+      boundX: null,
+      boundY: null,
+      boundZ: null
     },
     debugOptions: {
       showViewArea: false,

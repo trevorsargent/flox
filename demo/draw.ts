@@ -22,48 +22,37 @@ export const draw = (p: p5, ctx: Context): void => {
 
   p.push()
 
-  p.translate(0, ctx.params.bounds.y, 0)
+  p.translate(0, ctx.params.boundY, 0)
   p.rotateX(-p.PI / 2)
-  p.plane(ctx.params.bounds.x * 2, ctx.params.bounds.z * 2)
+  p.plane(ctx.params.boundX * 2, ctx.params.boundZ * 2)
 
   p.pop()
   p.push()
 
-  p.translate(0, -1 * ctx.params.bounds.y, 0)
+  p.translate(0, -1 * ctx.params.boundY, 0)
   p.rotateX(p.PI / 2)
-  p.plane(ctx.params.bounds.x * 2, ctx.params.bounds.z * 2)
+  p.plane(ctx.params.boundX * 2, ctx.params.boundZ * 2)
 
   p.pop()
 
   p.noFill()
   p.stroke(255)
 
-  p.box(
-    ctx.params.bounds.x * 2,
-    ctx.params.bounds.y * 2,
-    ctx.params.bounds.z * 2
-  )
+  p.box(ctx.params.boundX * 2, ctx.params.boundY * 2, ctx.params.boundZ * 2)
   p.noStroke()
   p.fill(255, 255, 255)
-  ctx.bees.forEach((bee) => drawBee(p, ctx, bee))
+  ctx.agents.forEach((agent) => drawAgent(p, agent))
 }
 
-const drawBee = (p: p5, ctx: Context, bee: Agent): void => {
-  const beeSize = 3
-  const beeShade = 5
+const drawAgent = (p: p5, agent: Agent): void => {
+  const size = 3
+  const shade = 5
 
   p.fill(255)
 
-  // const color = pipe(
-  //   normalize,
-  //   applyToComponents((c) => 255 * c + 255 / 2)
-  // )(bee.vel)
-
-  // p.fill(color.x, color.y, color.z)
-
   p.push()
-  p.translate(bee.pos.x, bee.pos.y, bee.pos.z)
+  p.translate(agent.pos.x, agent.pos.y, agent.pos.z)
 
-  p.sphere(beeSize)
+  p.sphere(size)
   p.pop()
 }

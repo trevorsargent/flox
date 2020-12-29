@@ -3,7 +3,10 @@ import Flock, { ParamSet } from '..'
 import { draw } from './draw'
 
 interface ParamSliderInfo {
-  ref: Element
+  min: number
+  max: number
+  init: number
+  step: number
   name: string
 }
 
@@ -13,91 +16,140 @@ function sketch(p: p5) {
   let params: { [index: string]: ParamSliderInfo }
 
   p.setup = () => {
-    p.createCanvas(1100, 650, p.WEBGL)
+    p.createCanvas(window.innerWidth - 200, window.innerHeight, p.WEBGL)
 
-    params = {
+    params = <ParamSet<ParamSliderInfo>>{
       targetPopulation: {
-        ref: p.createSlider(10, 250, 80, 1),
+        min: 10,
+        max: 250,
+        init: 80,
+        step: 1,
         name: 'Target Population'
       },
       viewDistance: {
-        ref: p.createSlider(0, 200, 100, 1),
+        min: 0,
+        max: 200,
+        init: 100,
+        step: 1,
         name: 'View Distance'
       },
       viewAngle: {
-        ref: p.createSlider(0, p.PI * 2, p.PI / 2, 0),
+        min: 0,
+        max: p.PI * 2,
+        init: p.PI / 2,
+        step: 0,
         name: 'View Angle'
       },
       minSpeed: {
-        ref: p.createSlider(0, 10, 2, 0),
+        min: 0,
+        max: 10,
+        init: 2,
+        step: 0,
         name: 'Min Speed'
       },
       maxSpeed: {
-        ref: p.createSlider(5, 20, 10, 0),
+        min: 5,
+        max: 20,
+        init: 10,
+        step: 0,
         name: 'Max Speed'
       },
-      maxForce:{
-        ref: p.createSlider(2, 20, 2, 0), 
+      maxForce: {
+        min: 2,
+        max: 20,
+        init: 2,
+        step: 0,
         name: 'Max Force'
       },
       cohesiveForce: {
-        ref: p.createSlider(0, 1, .25, 0),
+        min: 0,
+        max: 1,
+        init: 0.25,
+        step: 0,
         name: 'Cohesive Force'
       },
       alignmentForce: {
-        ref: p.createSlider(0, 1, .25, 0),
+        min: 0,
+        max: 1,
+        init: 0.25,
+        step: 0,
         name: 'Alignment Force'
       },
       separationForce: {
-        ref: p.createSlider(0, 1, .25, 0),
+        min: 0,
+        max: 1,
+        init: 0.25,
+        step: 0,
         name: 'Separation Force'
       },
       boundX: {
-        ref: p.createSlider(0, 400, 200, 1),
+        min: 0,
+        max: 400,
+        init: 200,
+        step: 1,
         name: 'BoundsX'
       },
       boundY: {
-        ref: p.createSlider(0, 400, 200, 1),
+        min: 0,
+        max: 400,
+        init: 200,
+        step: 1,
         name: 'BoundsY'
       },
       boundZ: {
-        ref: p.createSlider(0, 400, 200, 1),
+        min: 0,
+        max: 400,
+        init: 200,
+        step: 1,
         name: 'BoundsZ'
       }
     }
 
-    Object.entries(params).forEach(([_, param], idx, sliders) => {
-      const y = 10
-      const x = (idx / sliders.length) * window.innerWidth
-      param.ref.position(x, y)
-      param.ref.size(100)
+    const ctrls = document.getElementById('controls')
+
+    Object.entries(params).forEach(([key, param], idx, sliders) => {
+      const div = document.createElement('div')
+      div.style.padding = '3px'
+
+      const slider = document.createElement('INPUT') as HTMLInputElement
+      slider.setAttribute('type', 'range')
+      slider.setAttribute('step', param.step > 0 ? `${param.step}` : 'any')
+      slider.setAttribute('min', `${param.min}`)
+      slider.setAttribute('max', `${param.max}`)
+      slider.setAttribute('value', `${param.init}`)
+
+      const label = document.createElement('p')
+      label.innerText = param.name
+      label.style.marginBottom = '2px'
+      label.style.marginTop = '10px'
+
+      const indicator = document.createElement('span')
+      indicator.innerText = Number.parseFloat(param.init.toString()).toFixed(2)
+      indicator.style.float = 'right'
+
+      div.appendChild(indicator)
+      div.appendChild(label)
+      div.appendChild(slider)
+
+      ctrls.appendChild(div)
+
+      flock.applyParams({
+        [key]: param.init
+      })
+
+      slider.oninput = function () {
+        const v = Number.parseFloat((this as any).value)
+        indicator.innerText = v.toFixed(2)
+        flock.applyParams({
+          [key]: v
+        })
+      }
     })
   }
 
   p.draw = () => {
-    flock.tick(getUpdateParams(params))
+    flock.tick()
     draw(p, flock.context)
-  }
-
-  const getUpdateParams = (params: {
-    [index: string]: ParamSliderInfo
-  }): ParamSet<number> => {
-    return {
-      alignmentForce: params.alignmentForce.ref.value() as number,
-      cohesiveForce: params.cohesiveForce.ref.value() as number,
-      viewDistance: params.viewDistance.ref.value() as number,
-      viewAngle: params.viewAngle.ref.value() as number,
-      separationForce: params.separationForce.ref.value() as number,
-      maxSpeed: params.maxSpeed.ref.value() as number,
-      targetPopulation: params.targetPopulation.ref.value() as number,
-      maxForce: params.maxForce.ref.value() as number, 
-      minSpeed: params.minSpeed.ref.value() as number, 
-      bounds: {
-        x: params.boundX.ref.value() as number,
-        y: params.boundY.ref.value() as number,
-        z: params.boundZ.ref.value() as number
-      }
-    }
   }
 }
 

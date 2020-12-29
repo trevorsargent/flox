@@ -11,15 +11,15 @@ export class Flock {
     this.context = init()
   }
 
-  bees() {
-    return this.context.bees
+  agents() {
+    return this.context.agents
   }
 
-  tick(params?: Partial<ParamSet<number>>) {
-    if (params) {
-      Object.assign(this.context.params, params)
-    }
+  applyParams(params: Partial<ParamSet<number>>) {
+    Object.assign(this.context.params, params)
+  }
 
+  tick() {
     tick(this.context)
   }
 }
@@ -29,16 +29,18 @@ export type ParamSet<T> = {
   viewDistance: T
   viewAngle: T
   maxSpeed: T
-  minSpeed: T, 
-  maxForce: T,
+  minSpeed: T
+  maxForce: T
   cohesiveForce: T
   separationForce: T
   alignmentForce: T
-  bounds: C3<T>
+  boundX: T
+  boundY: T
+  boundZ: T
 }
 
 export interface Context {
-  bees: Agent[]
+  agents: Agent[]
   // canvas: Canvas
   params: ParamSet<number>
   debugOptions: {
