@@ -15,7 +15,7 @@ export class Flock {
     return this.context.bees
   }
 
-  update(params?: ParamSet<number>) {
+  tick(params?: Partial<ParamSet<number>>) {
     if (params) {
       Object.assign(this.context.params, params)
     }

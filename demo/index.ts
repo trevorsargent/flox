@@ -72,14 +72,10 @@ function sketch(p: p5) {
       param.ref.position(x, y)
       param.ref.size(100)
     })
-
-    // setInterval(() => {
-    //   update(ctx)
-    // }, 33)
   }
 
   p.draw = () => {
-    flock.update(getUpdateParams(params))
+    flock.tick(getUpdateParams(params))
     draw(p, flock.context)
   }
 
