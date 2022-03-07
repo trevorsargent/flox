@@ -7,11 +7,11 @@ export class Agent {
   readonly vel: V3
   private acc: V3
 
-  private minSpeed: number
-  private maxSpeed: number
-  private maxForce: number
-
-  constructor() {
+  constructor(
+    private minSpeed: number,
+    private maxSpeed: number,
+    private maxForce: number
+  ) {
     this.id = uuid.v4()
     this.pos = new V3({ x: 0, y: 0, z: 0 })
 
@@ -30,16 +30,14 @@ export class Agent {
     this.maxSpeed = max
   }
 
-  setMaxForce(max: number){
+  setMaxForce(max: number) {
     this.maxForce = max
   }
 
   tick() {
     const acc = clampMagnitude(0)(this.maxForce)(this.acc)
 
-    const vel = clampMagnitude(this.minSpeed)(this.maxSpeed)(
-      add(this.vel)(acc)
-    )
+    const vel = clampMagnitude(this.minSpeed)(this.maxSpeed)(add(this.vel)(acc))
     this.vel.set(vel)
     this.pos.set(add(this.pos)(this.vel))
     this.resetAcceleration()

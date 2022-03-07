@@ -1,5 +1,5 @@
 import p5, { Element } from 'p5'
-import Flock, { ParamSet } from '..'
+import { Flock, ParamSet } from '../flock/types/flock'
 import { draw } from './draw'
 
 interface ParamSliderInfo {
@@ -21,9 +21,9 @@ function sketch(p: p5) {
     params = <ParamSet<ParamSliderInfo>>{
       targetPopulation: {
         min: 10,
-        max: 250,
-        init: 80,
-        step: 1,
+        max: 1000,
+        init: 100,
+        step: 5,
         name: 'Target Population'
       },
       viewDistance: {
@@ -57,29 +57,29 @@ function sketch(p: p5) {
       maxForce: {
         min: 2,
         max: 20,
-        init: 2,
-        step: 0,
+        init: 20,
+        step: 1,
         name: 'Max Force'
       },
       cohesiveForce: {
         min: 0,
         max: 1,
         init: 0.25,
-        step: 0,
+        step: 0.1,
         name: 'Cohesive Force'
       },
       alignmentForce: {
         min: 0,
         max: 1,
         init: 0.25,
-        step: 0,
+        step: 0.1,
         name: 'Alignment Force'
       },
       separationForce: {
         min: 0,
         max: 1,
         init: 0.25,
-        step: 0,
+        step: 0.1,
         name: 'Separation Force'
       },
       boundX: {
@@ -106,6 +106,10 @@ function sketch(p: p5) {
     }
 
     const ctrls = document.getElementById('controls')
+
+    if (!ctrls) {
+      return
+    }
 
     Object.entries(params).forEach(([key, param], idx, sliders) => {
       const div = document.createElement('div')
@@ -149,7 +153,7 @@ function sketch(p: p5) {
 
   p.draw = () => {
     flock.tick()
-    draw(p, flock.context)
+    draw(p, flock)
   }
 }
 

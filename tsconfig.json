@@ -3,8 +3,10 @@
     "module": "commonjs",
     "esModuleInterop": true,
     "sourceMap": true,
+    "strict": true,
     "downlevelIteration": true,
-    "allowJs": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "lib": ["ESNext", "ESNext.AsyncIterable", "dom"],
     "rootDir": "./src",
     "moduleResolution": "node"
