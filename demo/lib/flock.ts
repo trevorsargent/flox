@@ -15,7 +15,7 @@ export class Flock {
   }
 
   getParams(): FlockParams<number> {
-    return (get_flock(this.params) as JsFlock).params
+    return this.params
   }
 
   applyParams(params: Partial<FlockParams<number>>) {
