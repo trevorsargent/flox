@@ -1,6 +1,8 @@
+import { advance } from 'flox'
 import p5, { Element } from 'p5'
-import { Flock, ParamSet } from '../flock/types/flock'
-import { draw } from './draw'
+import { FlockParams } from '../bindings/FlockParams'
+import { Flock } from './lib/flock'
+import { draw } from './lib/run'
 
 interface ParamSliderInfo {
   min: number
@@ -13,90 +15,84 @@ interface ParamSliderInfo {
 function sketch(p: p5) {
   const flock = new Flock()
 
-  let params: { [index: string]: ParamSliderInfo }
+  let params: FlockParams<ParamSliderInfo>
 
   p.setup = () => {
     p.createCanvas(window.innerWidth - 200, window.innerHeight, p.WEBGL)
 
-    params = <ParamSet<ParamSliderInfo>>{
-      targetPopulation: {
+    params = <FlockParams<ParamSliderInfo>>{
+      target_population: {
         min: 10,
         max: 1000,
         init: 100,
         step: 5,
         name: 'Target Population'
       },
-      viewDistance: {
+      view_distance: {
         min: 0,
         max: 200,
         init: 100,
         step: 1,
         name: 'View Distance'
       },
-      viewAngle: {
+      view_angle: {
         min: 0,
         max: p.PI * 2,
         init: p.PI / 2,
         step: 0,
         name: 'View Angle'
       },
-      minSpeed: {
+      min_speed: {
         min: 0,
         max: 10,
         init: 2,
         step: 0,
         name: 'Min Speed'
       },
-      maxSpeed: {
+      max_speed: {
         min: 5,
         max: 20,
         init: 10,
         step: 0,
         name: 'Max Speed'
       },
-      maxForce: {
-        min: 2,
-        max: 20,
-        init: 20,
-        step: 1,
-        name: 'Max Force'
-      },
-      cohesiveForce: {
+
+      cohesive_force: {
         min: 0,
         max: 1,
         init: 0.25,
-        step: 0.1,
+        step: 0,
         name: 'Cohesive Force'
       },
-      alignmentForce: {
+      alignment_force: {
         min: 0,
         max: 1,
         init: 0.25,
-        step: 0.1,
+        step: 0,
         name: 'Alignment Force'
       },
-      separationForce: {
+      separation_force: {
         min: 0,
         max: 1,
         init: 0.25,
-        step: 0.1,
+        step: 0,
         name: 'Separation Force'
       },
-      boundX: {
+      bound_x: {
         min: 0,
         max: 400,
         init: 200,
         step: 1,
         name: 'BoundsX'
       },
-      boundY: {
+      bound_y: {
         min: 0,
         max: 400,
         init: 200,
         step: 1,
         name: 'BoundsY'
       },
-      boundZ: {
+      bound_z: {
         min: 0,
         max: 400,
         init: 200,
@@ -151,9 +147,9 @@ function sketch(p: p5) {
     })
   }
 
-  p.draw = () => {
-    flock.tick()
+  p.draw = function () {
     draw(p, flock)
+    flock.tick()
   }
 }
 

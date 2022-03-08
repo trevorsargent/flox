@@ -8,8 +8,8 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "lib": ["ESNext", "ESNext.AsyncIterable", "dom"],
-    "rootDir": "./src",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "rootDir": "./"
   },
   "exclude": ["./dist", "./.cache"]
 }

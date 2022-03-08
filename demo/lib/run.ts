@@ -1,6 +1,7 @@
 import p5 from 'p5'
-import { Agent } from '../flock/types/agent'
-import { Context, Flock } from '../flock/types/flock'
+import { JsAgent } from '../../bindings/JsAgent'
+import { Agent } from './agent'
+import { Flock } from './flock'
 
 // const WIDTH = 700
 export const draw = (p: p5, flock: Flock): void => {
@@ -22,16 +23,16 @@ export const draw = (p: p5, flock: Flock): void => {
 
   p.push()
 
-  p.translate(0, flock.getParams().boundY, 0)
+  p.translate(0, flock.getParams().bound_y, 0)
   p.rotateX(-p.PI / 2)
-  p.plane(flock.getParams().boundX * 2, flock.getParams().boundZ * 2)
+  p.plane(flock.getParams().bound_x * 2, flock.getParams().bound_z * 2)
 
   p.pop()
   p.push()
 
-  p.translate(0, -1 * flock.getParams().boundY, 0)
+  p.translate(0, -1 * flock.getParams().bound_y, 0)
   p.rotateX(p.PI / 2)
-  p.plane(flock.getParams().boundX * 2, flock.getParams().boundZ * 2)
+  p.plane(flock.getParams().bound_x * 2, flock.getParams().bound_z * 2)
 
   p.pop()
 
@@ -39,16 +40,16 @@ export const draw = (p: p5, flock: Flock): void => {
   p.stroke(255)
 
   p.box(
-    flock.getParams().boundX * 2,
-    flock.getParams().boundY * 2,
-    flock.getParams().boundZ * 2
+    flock.getParams().bound_x * 2,
+    flock.getParams().bound_y * 2,
+    flock.getParams().bound_z * 2
   )
   p.noStroke()
   p.fill(255, 255, 255)
   flock.getAgents().forEach((agent) => drawAgent(p, agent))
 }
 
-const drawAgent = (p: p5, agent: Agent): void => {
+const drawAgent = (p: p5, agent: JsAgent): void => {
   const size = 3
   const shade = 5
 

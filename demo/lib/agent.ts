@@ -1,5 +1,5 @@
 import * as uuid from 'uuid'
-import { add, clampMagnitude, I3, newNormalV3, V3 } from '../../lib/v3'
+import { add, clampMagnitude, I3, newNormalV3, V3 } from './v3'
 
 export class Agent {
   id: string
