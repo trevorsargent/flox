@@ -5,11 +5,11 @@ use std::{mem, sync::Mutex};
 use serde::{Deserialize, Serialize};
 use ts_rs::TS;
 
-use crate::agent::{Agent, AgentParams};
+use crate::agent::{Agent, AgentParams, Movement, Neighborly};
 
 #[derive(TS)]
 #[ts(export)]
-#[derive(Serialize, Deserialize, Default, Clone, Copy)]
+#[derive(Serialize, Deserialize, Default, Clone, Copy, Debug)]
 pub struct FlockParams<T = f32> {
     pub target_population: T,
     pub view_distance: T,
@@ -50,12 +50,47 @@ impl Flock {
     }
 
     #[allow(dead_code)]
-    pub fn advance(&self) {
-        self.members.lock().as_mut().unwrap().pop();
+    pub fn set_params(&self, params: FlockParams) -> FlockParams {
+        mem::replace(self.params.lock().as_mut().unwrap(), params)
     }
 
     #[allow(dead_code)]
-    pub fn set_params(&self, params: FlockParams) -> FlockParams {
-        mem::replace(self.params.lock().as_mut().unwrap(), params)
+    pub fn advance(&self) {
+        self.control_population();
+        self.advance_agents();
+    }
+
+    fn control_population(&self) {
+        if self.members.lock().unwrap().len()
+            < self.params.lock().unwrap().target_population as usize
+        {
+            self.members.lock().unwrap().push(Agent::new(AgentParams {
+                acc: None,
+                pos: None,
+                vel: None,
+            }))
+        }
+
+        if self.members.lock().unwrap().len()
+            > self.params.lock().unwrap().target_population as usize
+        {
+            self.members.lock().unwrap().pop();
+        }
+    }
+
+    fn advance_agents(&self) {
+        let mut members = self.members.lock().unwrap();
+        let members_copy = members.to_vec();
+
+        for agent in members.iter_mut() {
+            let local_copy = members_copy.to_vec();
+            let neighbors = local_copy
+                .into_iter()
+                .filter(|a| a.is_neighbor(&agent))
+                .collect();
+
+            agent.update_forces(&self.params.lock().unwrap(), neighbors);
+            agent.advance()
+        }
     }
 }

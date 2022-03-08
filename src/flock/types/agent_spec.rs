@@ -64,9 +64,9 @@ fn it_moves() {
 fn it_accelerates() {
     let mut agent = Agent::new(AgentParams {
         pos: Some(Vector3 {
-            x: 1.0,
-            y: 1.0,
-            z: 1.0,
+            x: 0.0,
+            y: 0.0,
+            z: 0.0,
         }),
         vel: Some(Vector3 {
             x: 1.0,
@@ -83,15 +83,15 @@ fn it_accelerates() {
     agent.advance();
 
     assert_eq!(agent.vel.x, 1.5);
-    assert_eq!(agent.pos.x, 2.5);
+    assert_eq!(agent.pos.x, 1.5);
 
     agent.advance();
 
     assert_eq!(agent.vel.x, 2.0);
-    assert_eq!(agent.pos.x, 4.5);
+    assert_eq!(agent.pos.x, 3.5);
 
     agent.advance();
 
     assert_eq!(agent.vel.x, 2.5);
-    assert_eq!(agent.pos.x, 7.0);
+    assert_eq!(agent.pos.x, 6.0);
 }
