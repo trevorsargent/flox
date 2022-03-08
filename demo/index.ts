@@ -23,9 +23,9 @@ function sketch(p: p5) {
     params = <FlockParams<ParamSliderInfo>>{
       target_population: {
         min: 10,
-        max: 1000,
-        init: 100,
-        step: 5,
+        max: 500,
+        init: 300,
+        step: 1,
         name: 'Target Population'
       },
       view_distance: {
