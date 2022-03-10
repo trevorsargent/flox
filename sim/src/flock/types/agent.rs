@@ -3,7 +3,7 @@ mod agent_spec;
 use crate::flock::FlockParams;
 use vex::Vector3;
 
-use rand::{prelude::*, rngs::mock::StepRng};
+use rand::prelude::*;
 
 #[derive(Debug, Clone, Copy)]
 pub struct Agent {
@@ -197,7 +197,7 @@ impl Neighborly for Agent {
     }
 }
 
-fn limit(vec: Vector3, min_mag: f32, max_mag: f32) -> Vector3 {
+fn limit(vec: Vector3, _min_mag: f32, max_mag: f32) -> Vector3 {
     let mag = vec.mag();
     let mut copy = vec.clone();
 
