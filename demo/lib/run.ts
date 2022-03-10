@@ -1,7 +1,6 @@
 import p5 from 'p5'
-import { FlockParams } from '../../bindings/FlockParams'
-import { JsAgent } from '../../bindings/JsAgent'
-import { Agent } from './agent'
+import { FlockParams } from '../../sim/bindings/FlockParams'
+import { JsAgent } from '../../sim/bindings/JsAgent'
 import { Flock } from './flock'
 
 // const WIDTH = 700

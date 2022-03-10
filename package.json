@@ -3,7 +3,7 @@
     "concurrently": "^7.0.0"
   },
   "scripts": {
-    "wasm-serve": "cargo watch -w ./src  -s 'cargo test && wasm-pack build'",
+    "wasm-serve": "cargo watch -w ./sim/src  -s 'cargo test && wasm-pack build sim'",
     "serve-demo": "npm run --prefix ./demo start",
     "dev": "concurrently --kill-others \"npm run wasm-serve\" \"npm run serve-demo\""
   }

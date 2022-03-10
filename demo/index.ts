@@ -1,5 +1,5 @@
-import p5, { Element } from 'p5'
-import { FlockParams } from '../bindings/FlockParams'
+import p5 from 'p5'
+import { FlockParams } from '../sim/bindings/FlockParams'
 import { Flock } from './lib/flock'
 import { draw } from './lib/run'
 

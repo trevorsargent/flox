@@ -1,10 +1,10 @@
 import { SmartMap } from './smartMap'
 
 import { Agent } from './agent'
-import { get_flock, advance, set_params } from 'flox'
-import { JsFlock } from '../../bindings/JsFlock'
-import { JsAgent } from '../../bindings/JsAgent'
-import { FlockParams } from '../../bindings/FlockParams'
+import { get_flock, advance, set_params } from '../../sim/pkg'
+import { JsFlock } from '../../sim/bindings/JsFlock'
+import { JsAgent } from '../../sim/bindings/JsAgent'
+import { FlockParams } from '../../sim/bindings/FlockParams'
 
 export class Flock {
   private params: FlockParams<number> = <FlockParams<number>>{}
