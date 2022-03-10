@@ -11,6 +11,7 @@ export class Flock {
 
   getAgents(): JsAgent[] {
     const flock = get_flock(this.params) as JsFlock
+    console.log(flock.members.slice(0, 1).pop())
     return flock.members
   }
 

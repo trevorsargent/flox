@@ -3,7 +3,7 @@ use std::sync::Mutex;
 use once_cell::sync::OnceCell;
 use serde::{Deserialize, Serialize};
 use ts_rs::TS;
-use wasm_bindgen::{prelude::wasm_bindgen, throw_str, JsValue};
+use wasm_bindgen::{prelude::wasm_bindgen, throw_str, throw_val, JsValue};
 
 use crate::{
     agent::Agent,
@@ -24,6 +24,8 @@ struct V3 {
 #[derive(Serialize, Deserialize)]
 struct JsAgent {
     pos: V3,
+    vel: V3,
+    acc: V3,
 }
 
 impl JsAgent {
@@ -33,6 +35,16 @@ impl JsAgent {
                 x: agent.pos.x,
                 y: agent.pos.y,
                 z: agent.pos.z,
+            },
+            vel: V3 {
+                x: agent.vel.x,
+                y: agent.vel.y,
+                z: agent.vel.z,
+            },
+            acc: V3 {
+                x: agent.acc.x,
+                y: agent.acc.y,
+                z: agent.acc.z,
             },
         }
     }
@@ -129,7 +141,7 @@ pub fn set_params(params: JsValue) {
     let deser = params.into_serde();
 
     if deser.is_err() {
-        throw_str("Cannot Deserialize Params")
+        throw_val(params);
     }
 
     let s = deser.unwrap();

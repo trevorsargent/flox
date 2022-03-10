@@ -1,4 +1,3 @@
-import { advance } from 'flox'
 import p5, { Element } from 'p5'
 import { FlockParams } from '../bindings/FlockParams'
 import { Flock } from './lib/flock'
@@ -20,7 +19,9 @@ function sketch(p: p5) {
   p.setup = () => {
     p.createCanvas(window.innerWidth - 200, window.innerHeight, p.WEBGL)
 
-    params = <FlockParams<ParamSliderInfo>>{
+    const MAX_FORCE = 2
+
+    params = {
       target_population: {
         min: 10,
         max: 500,
@@ -42,39 +43,46 @@ function sketch(p: p5) {
         step: 0,
         name: 'View Angle'
       },
-      min_speed: {
-        min: 0,
-        max: 10,
-        init: 2,
-        step: 0,
-        name: 'Min Speed'
-      },
       max_speed: {
-        min: 5,
-        max: 20,
-        init: 10,
+        min: 1,
+        max: 10,
+        init: 6,
         step: 0,
         name: 'Max Speed'
       },
 
+      min_speed: {
+        min: 1,
+        max: 10,
+        init: 1,
+        step: 0,
+        name: 'Min Speed'
+      },
+      max_force: {
+        min: 0,
+        max: MAX_FORCE,
+        init: 0.3,
+        step: 0,
+        name: 'Max Force'
+      },
       cohesive_force: {
         min: 0,
-        max: 1,
-        init: 0.25,
+        max: MAX_FORCE,
+        init: 0.8,
         step: 0,
         name: 'Cohesive Force'
       },
       alignment_force: {
         min: 0,
-        max: 1,
-        init: 0.25,
+        max: MAX_FORCE,
+        init: 0.3,
         step: 0,
         name: 'Alignment Force'
       },
       separation_force: {
         min: 0,
-        max: 1,
-        init: 0.25,
+        max: MAX_FORCE,
+        init: 0.5,
         step: 0,
         name: 'Separation Force'
       },

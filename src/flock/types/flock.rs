@@ -14,6 +14,7 @@ pub struct FlockParams<T = f32> {
     pub target_population: T,
     pub view_distance: T,
     pub view_angle: T,
+    pub max_force: T,
     pub max_speed: T,
     pub min_speed: T,
     pub cohesive_force: T,
@@ -86,11 +87,11 @@ impl Flock {
             let local_copy = members_copy.to_vec();
             let neighbors = local_copy
                 .into_iter()
-                .filter(|a| a.is_neighbor(&agent))
+                .filter(|a| a.is_neighbor(&agent, &self.params.lock().unwrap()))
                 .collect();
 
             agent.update_forces(&self.params.lock().unwrap(), neighbors);
-            agent.advance()
+            agent.advance(&self.params.lock().unwrap())
         }
     }
 }

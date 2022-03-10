@@ -1,4 +1,5 @@
 import p5 from 'p5'
+import { FlockParams } from '../../bindings/FlockParams'
 import { JsAgent } from '../../bindings/JsAgent'
 import { Agent } from './agent'
 import { Flock } from './flock'
@@ -46,12 +47,21 @@ export const draw = (p: p5, flock: Flock): void => {
   )
   p.noStroke()
   p.fill(255, 255, 255)
-  flock.getAgents().forEach((agent) => drawAgent(p, agent))
+  flock
+    .getAgents()
+    .forEach((agent, index) =>
+      drawAgent(p, agent, flock.getParams(), index === 0)
+    )
 }
 
-const drawAgent = (p: p5, agent: JsAgent): void => {
+const shade = 10
+const drawAgent = (
+  p: p5,
+  agent: JsAgent,
+  params: FlockParams,
+  debug = false
+): void => {
   const size = 3
-  const shade = 5
 
   p.fill(255)
 
