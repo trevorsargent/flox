@@ -2,7 +2,8 @@
 
 members = [
     "sim",
-    "render"
+    "render",
+    "interop", 
 ]
 
 [profile.release]

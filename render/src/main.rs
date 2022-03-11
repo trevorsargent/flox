@@ -5,12 +5,18 @@ use three::Object;
 
 extern crate three;
 
-fn main() {
+pub fn main() {
+    render();
+}
+
+pub fn render() {
     let mut meshes: HashMap<usize, three::Mesh> = HashMap::new();
 
     let mut params = FlockParams {
         target_population: 2000.0,
         view_distance: 40.0,
+        use_chunks: true,
+        chunk_size: 1.5,
         ..FlockParams::default()
     };
     let flock = Flock::new(&params);

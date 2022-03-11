@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 sim = {path = "../sim"}
 three = "0.4.0"
+wasm-bindgen = { version = "0.2", features = ["serde-serialize"] }

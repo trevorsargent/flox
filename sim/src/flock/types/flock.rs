@@ -25,6 +25,7 @@ pub struct FlockParams<T = f32> {
     pub bound_y: T,
     pub bound_z: T,
     pub use_chunks: bool,
+    pub chunk_size: T,
 }
 
 impl Default for FlockParams {
@@ -43,6 +44,7 @@ impl Default for FlockParams {
             view_angle: PI / 2.0,
             view_distance: 50.0,
             use_chunks: false,
+            chunk_size: 1.5,
         }
     }
 }

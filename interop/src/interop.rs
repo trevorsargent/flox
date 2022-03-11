@@ -5,10 +5,8 @@ use serde::{Deserialize, Serialize};
 use ts_rs::TS;
 use wasm_bindgen::{prelude::wasm_bindgen, throw_str, throw_val, JsValue};
 
-use crate::{
-    agent::Agent,
-    flock::{Flock, FlockParams},
-};
+use sim::agent::Agent;
+use sim::flock::{Flock, FlockParams};
 
 #[derive(TS)]
 #[ts(export)]
