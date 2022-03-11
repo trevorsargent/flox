@@ -1,5 +1,9 @@
 [workspace]
 
 members = [
-    "sim"
+    "sim",
+    "render"
 ]
+
+[profile.release]
+debug = true
